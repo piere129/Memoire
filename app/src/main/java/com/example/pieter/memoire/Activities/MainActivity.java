@@ -1,6 +1,7 @@
 package com.example.pieter.memoire.Activities;
 
-import android.graphics.Color;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.pieter.memoire.Adapters.ThemeAdapter;
+import com.example.pieter.memoire.Fragments.ThemesFragment;
 import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
 
@@ -31,17 +33,24 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
-    @BindView(R.id.themeRecyclerView) RecyclerView themesRecyclerView;
     @BindView(R.id.nav_view) NavigationView navigationView;
-
-    private List<Theme> themesList = new ArrayList<>();
-    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        FragmentManager fm = getFragmentManager();
+        if(fm.findFragmentById(R.id.themesFragmentContainer) == null)
+        {
+            ThemesFragment themesFragment = new ThemesFragment();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.add(R.id.themesFragmentContainer,themesFragment);
+            transaction.commit();
+        }
+
+
 
         setSupportActionBar(toolbar);
 
@@ -61,20 +70,10 @@ public class MainActivity extends AppCompatActivity
 
 
         navigationView.setNavigationItemSelectedListener(this);
-        generateData();
-        final ThemeAdapter themeAdapter = new ThemeAdapter(themesList,this);
-        layoutManager = new LinearLayoutManager(this);
-        themesRecyclerView.setLayoutManager(layoutManager);
-        themesRecyclerView.setAdapter(themeAdapter);
+
     }
 
-    private void generateData(){
-        for(int i = 0; i<100; i++)
-        {
-            Theme theme = new Theme(i + "hallo vrienden it's ya boy poeter");
-            themesList.add(theme);
-        }
-    }
+
 
     @Override
     public void onBackPressed() {

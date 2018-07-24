@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
 
-    private List<Theme> list = new ArrayList<>();
+    private List<Theme> list;
     private Context context;
 
     public ThemeAdapter(List<Theme> list, Context context) {
