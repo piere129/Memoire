@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ThemesViewHolder extends RecyclerView.ViewHolder {
 
@@ -16,5 +18,11 @@ public class ThemesViewHolder extends RecyclerView.ViewHolder {
 
     public ThemesViewHolder(View itemView) {
         super(itemView);
+        ButterKnife.bind(this, itemView);
+    }
+
+    public void setData(Theme theme)
+    {
+        name.setText(theme.getName());
     }
 }

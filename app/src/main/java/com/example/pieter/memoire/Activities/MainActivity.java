@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,7 +16,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.pieter.memoire.Adapters.ThemeAdapter;
+import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,8 +31,11 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
-    @BindView(R.id.themeRecyclerView) RecyclerView themesView;
+    @BindView(R.id.themeRecyclerView) RecyclerView themesRecyclerView;
     @BindView(R.id.nav_view) NavigationView navigationView;
+
+    private List<Theme> themesList = new ArrayList<>();
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +44,7 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        
-        themesView.setBackgroundColor(Color.RED);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +61,19 @@ public class MainActivity extends AppCompatActivity
 
 
         navigationView.setNavigationItemSelectedListener(this);
+        generateData();
+        final ThemeAdapter themeAdapter = new ThemeAdapter(themesList,this);
+        layoutManager = new LinearLayoutManager(this);
+        themesRecyclerView.setLayoutManager(layoutManager);
+        themesRecyclerView.setAdapter(themeAdapter);
+    }
+
+    private void generateData(){
+        for(int i = 0; i<100; i++)
+        {
+            Theme theme = new Theme(i + "hallo vrienden it's ya boy poeter");
+            themesList.add(theme);
+        }
     }
 
     @Override
