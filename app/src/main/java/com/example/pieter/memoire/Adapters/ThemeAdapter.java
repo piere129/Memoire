@@ -35,10 +35,24 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
     @Override
     public void onBindViewHolder(ThemesViewHolder holder, int position) {
         holder.setData(list.get(position));
+
     }
 
     @Override
     public int getItemCount() {
         return list.size();
     }
+
+    public void insertItem(int position, Theme theme)
+    {
+        list.add(position,theme);
+        notifyItemInserted(position);
+    }
+
+    public void removeItem(int position){
+        list.remove(position);
+        notifyItemRemoved(position);
+    }
 }
+
+
