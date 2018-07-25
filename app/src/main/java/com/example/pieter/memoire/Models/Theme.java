@@ -1,7 +1,5 @@
 package com.example.pieter.memoire.Models;
 
-import android.widget.ImageView;
-
 import java.util.List;
 
 public class Theme {
@@ -10,7 +8,8 @@ public class Theme {
     private int image;
     private List<Card> cards;
 
-    public Theme(){};
+    public Theme() {
+    }
 
     public Theme(String name, int image) {
 
@@ -18,12 +17,11 @@ public class Theme {
         this.image = image;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 

@@ -5,8 +5,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,13 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.pieter.memoire.Adapters.ThemeAdapter;
 import com.example.pieter.memoire.Fragments.ThemesFragment;
-import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,9 +24,12 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.fab) FloatingActionButton fab;
-    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +38,12 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         FragmentManager fm = getSupportFragmentManager();
-        if(fm.findFragmentById(R.id.themesFragmentContainer) == null)
-        {
+        if (fm.findFragmentById(R.id.themesFragmentContainer) == null) {
             ThemesFragment themesFragment = new ThemesFragment();
             FragmentTransaction transaction = fm.beginTransaction();
-            transaction.add(R.id.themesFragmentContainer,themesFragment);
+            transaction.add(R.id.themesFragmentContainer, themesFragment);
             transaction.commit();
         }
-
 
 
         setSupportActionBar(toolbar);
@@ -64,7 +58,7 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-            this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -72,7 +66,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
     }
-
 
 
     @Override
@@ -113,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-      if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 

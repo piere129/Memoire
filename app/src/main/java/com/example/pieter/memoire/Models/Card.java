@@ -1,6 +1,5 @@
 package com.example.pieter.memoire.Models;
 
-import android.media.Image;
 import android.widget.ImageView;
 
 public class Card {
@@ -9,20 +8,18 @@ public class Card {
     private String title;
     private String description;
 
-    public Card(ImageView image,String title)
-    {
+    public Card(ImageView image, String title) {
         this.image = image;
         this.title = title;
     }
 
-    public Card(ImageView image, String title, String description)
-    {
+    public Card(ImageView image, String title, String description) {
         this.image = image;
         this.title = title;
         this.description = description;
     }
 
-    public ImageView getImage(){
+    public ImageView getImage() {
         return this.image;
     }
 

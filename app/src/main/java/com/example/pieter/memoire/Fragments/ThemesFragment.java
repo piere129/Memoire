@@ -11,8 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.pieter.memoire.Activities.ThemeActivity;
 import com.example.pieter.memoire.Adapters.ThemeAdapter;
@@ -34,9 +32,9 @@ public class ThemesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.recycler_view,container,false);
+        View v = inflater.inflate(R.layout.recycler_view, container, false);
         generateData();
-        final ThemeAdapter themeAdapter =  new ThemeAdapter(themesList,getActivity());
+        final ThemeAdapter themeAdapter = new ThemeAdapter(themesList, getActivity());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
@@ -52,18 +50,16 @@ public class ThemesFragment extends Fragment {
         themesRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), themesRecyclerView, new ClickListener() {
             @Override
             public void onClick(View v, int position) {
-                Toast.makeText(getActivity(), "Hold a theme to delete it!",
-                        Toast.LENGTH_LONG).show();
 
                 Intent intent = new Intent(getContext(), ThemeActivity.class);
                 String extra = themesList.get(position).getName();
-                intent.putExtra("name",extra);
+                intent.putExtra("name", extra);
                 startActivity(intent);
             }
 
             @Override
             public void onLongClick(View v, int position) {
-               themeAdapter.removeItem(position);
+                themeAdapter.removeItem(position);
             }
         }));
         return v;
@@ -74,21 +70,20 @@ public class ThemesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
 
-
     }
 
-    private void generateData(){
+    private void generateData() {
 
-        Theme theme1 = new Theme("Relaties", R.drawable.relations );
+        Theme theme1 = new Theme("Relaties", R.drawable.relations);
         themesList.add(theme1);
 
-        Theme theme2 = new Theme("Wonen", R.drawable.firewatch );
+        Theme theme2 = new Theme("Wonen", R.drawable.firewatch);
         themesList.add(theme2);
 
-        Theme theme3 = new Theme("Vrijetijd & Dagbesteding", R.drawable.vrijetijd );
+        Theme theme3 = new Theme("Vrijetijd & Dagbesteding", R.drawable.vrijetijd);
         themesList.add(theme3);
 
-        Theme theme4 = new Theme("Gezondheid & Welzijn", R.drawable.health );
+        Theme theme4 = new Theme("Gezondheid & Welzijn", R.drawable.health);
         themesList.add(theme4);
 
         //load other themes v

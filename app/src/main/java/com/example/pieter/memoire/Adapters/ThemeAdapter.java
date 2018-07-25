@@ -11,7 +11,6 @@ import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
 import com.example.pieter.memoire.ViewHolders.ThemesViewHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
@@ -27,7 +26,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
     @NonNull
     @Override
     public ThemesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_theme,parent,false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_theme, parent, false);
         ThemesViewHolder themesViewHolder = new ThemesViewHolder(v);
         return themesViewHolder;
     }
@@ -43,13 +42,12 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
         return list.size();
     }
 
-    public void insertItem(int position, Theme theme)
-    {
+    public void insertItem(int position, Theme theme) {
         list.add(theme);
         notifyItemInserted(position);
     }
 
-    public void removeItem(int position){
+    public void removeItem(int position) {
         list.remove(position);
         notifyItemRemoved(position);
     }

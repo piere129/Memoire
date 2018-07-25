@@ -9,8 +9,6 @@ import android.widget.TextView;
 
 import com.example.pieter.memoire.R;
 
-import org.w3c.dom.Text;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -41,4 +39,5 @@ public class ThemeActivity extends AppCompatActivity {
             }
         });
     }
+
 }
