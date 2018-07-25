@@ -48,12 +48,13 @@ public class ThemesFragment extends Fragment {
         themesRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), themesRecyclerView, new ClickListener() {
             @Override
             public void onClick(View v, int position) {
-                themeAdapter.removeItem(position);
+                Toast.makeText(getActivity(), "Hold item to delete it!",
+                        Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onLongClick(View v, int position) {
-               themeAdapter.insertItem(position,new Theme("added Item"));
+               themeAdapter.removeItem(position);
             }
         }));
         return v;
@@ -70,7 +71,7 @@ public class ThemesFragment extends Fragment {
     private void generateData(){
         for(int i = 0; i<100; i++)
         {
-            Theme theme = new Theme(i + "hallo vrienden it's ya boy poeter");
+            Theme theme = new Theme("Custom Title", "This is the Custom description of the Theme");
             themesList.add(theme);
         }
     }
