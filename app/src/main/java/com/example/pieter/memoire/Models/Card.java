@@ -1,29 +1,32 @@
 package com.example.pieter.memoire.Models;
 
+import android.media.Image;
+import android.widget.ImageView;
+
 public class Card {
 
-    private int image;
+    private ImageView image;
     private String title;
     private String description;
 
-    public Card(int image,String title)
+    public Card(ImageView image,String title)
     {
         this.image = image;
         this.title = title;
     }
 
-    public Card(int image,String title, String description)
+    public Card(ImageView image, String title, String description)
     {
         this.image = image;
         this.title = title;
         this.description = description;
     }
 
-    public int getImage(){
+    public ImageView getImage(){
         return this.image;
     }
 
-    public void setImage(int image) {
+    public void setImage(ImageView image) {
         this.image = image;
     }
 

@@ -2,25 +2,20 @@ package com.example.pieter.memoire.Models;
 
 import android.widget.ImageView;
 
+import java.util.List;
+
 public class Theme {
 
     private String name;
-    private String description;
-    private ImageView image;
+    private int image;
+    private List<Card> cards;
 
     public Theme(){};
 
-    public Theme(String name, String description, ImageView image) {
+    public Theme(String name, int image) {
 
         this.name = name;
-        this.description = description;
         this.image = image;
-    }
-
-    public Theme(String name, String description)
-    {
-        this.name = name;
-        this.description = description;
     }
 
     public String getName(){
@@ -32,19 +27,11 @@ public class Theme {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public ImageView getImage() {
+    public int getImage() {
         return image;
     }
 
-    public void setImage(ImageView image) {
+    public void setImage(int image) {
         this.image = image;
     }
 }
