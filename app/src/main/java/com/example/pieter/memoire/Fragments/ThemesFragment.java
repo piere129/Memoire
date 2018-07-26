@@ -33,11 +33,9 @@ import butterknife.ButterKnife;
 public class ThemesFragment extends Fragment {
 
     private List<Theme> themesList = new ArrayList<>();
-    private RecyclerView themesRecyclerView;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
-
 
     @Nullable
     @Override
@@ -50,7 +48,7 @@ public class ThemesFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
-        themesRecyclerView = (RecyclerView) v.findViewById(R.id.themeRecyclerView);
+        final RecyclerView themesRecyclerView = (RecyclerView) v.findViewById(R.id.themeRecyclerView);
 
         themesRecyclerView.setAdapter(themeAdapter);
         themesRecyclerView.setLayoutManager(layoutManager);
@@ -77,7 +75,9 @@ public class ThemesFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         if(!inputName.getText().toString().isEmpty()) {
-                            themeAdapter.insertItem(new Theme(inputName.getText().toString()));
+                            Theme t = new Theme(inputName.getText().toString());
+                            themesList.add(t);
+                            themeAdapter.notifyItemInserted(themesList.size() - 1);
                             dialog.dismiss();
 
                         }
@@ -103,7 +103,9 @@ public class ThemesFragment extends Fragment {
 
             @Override
             public void onLongClick(View v, int position) {
-                themeAdapter.removeItem(position);
+                themesList.remove(position);
+                themesRecyclerView.getRecycledViewPool().clear();
+                themeAdapter.notifyItemRemoved(position);
             }
         }));
         return v;
@@ -131,4 +133,5 @@ public class ThemesFragment extends Fragment {
         //load other themes v
     }
 
+    
 }

@@ -2,6 +2,7 @@ package com.example.pieter.memoire.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
-    ThemesFragment themesFragment;
+    Fragment themesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity
             transaction.add(R.id.themesFragmentContainer, themesFragment);
             transaction.commit();
         }
-
 
         setSupportActionBar(toolbar);
 
@@ -129,4 +129,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
