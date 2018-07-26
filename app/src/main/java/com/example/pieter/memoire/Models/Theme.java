@@ -11,6 +11,11 @@ public class Theme {
     public Theme() {
     }
 
+    public Theme(String name)
+    {
+        this.name = name;
+    }
+
     public Theme(String name, int image) {
 
         this.name = name;

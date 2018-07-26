@@ -4,13 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.pieter.memoire.Activities.ThemeActivity;
 import com.example.pieter.memoire.Adapters.ThemeAdapter;
@@ -22,10 +27,16 @@ import com.example.pieter.memoire.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ThemesFragment extends Fragment {
 
     private List<Theme> themesList = new ArrayList<>();
     private RecyclerView themesRecyclerView;
+
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
 
     @Nullable
@@ -33,6 +44,7 @@ public class ThemesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.recycler_view, container, false);
+        ButterKnife.bind(this, v);
         generateData();
         final ThemeAdapter themeAdapter = new ThemeAdapter(themesList, getActivity());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -46,6 +58,38 @@ public class ThemesFragment extends Fragment {
         itemAnimator.setAddDuration(1000);
         itemAnimator.setRemoveDuration(1000);
         themesRecyclerView.setItemAnimator(itemAnimator);
+
+        fab.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                final View dialogview = getLayoutInflater().inflate(R.layout.dialog_create_theme, null);
+                final EditText inputName = (EditText) dialogview.findViewById(R.id.input_name);
+                Button btnCreateTheme = (Button) dialogview.findViewById(R.id.btn_create_theme);
+
+                builder.setView(dialogview);
+
+                final AlertDialog dialog = builder.show();
+
+                btnCreateTheme.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View view) {
+                        if(!inputName.getText().toString().isEmpty()) {
+                            themeAdapter.insertItem(new Theme(inputName.getText().toString()));
+                            dialog.dismiss();
+
+                        }
+                        else {
+                            Toast.makeText(getContext(),"Please fill in the name field!",Toast.LENGTH_LONG).show();
+                        }
+                    }
+            });
+
+        }});
+
+
 
         themesRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), themesRecyclerView, new ClickListener() {
             @Override
@@ -68,8 +112,6 @@ public class ThemesFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
     }
 
     private void generateData() {

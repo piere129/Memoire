@@ -42,9 +42,10 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
         return list.size();
     }
 
-    public void insertItem(int position, Theme theme) {
+    public void insertItem(Theme theme) {
         list.add(theme);
-        notifyItemInserted(position);
+        notifyItemInserted(list.size());
+        //could be -1, needs to be tested!
     }
 
     public void removeItem(int position) {

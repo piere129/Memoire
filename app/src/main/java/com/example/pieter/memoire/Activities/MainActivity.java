@@ -1,10 +1,10 @@
 package com.example.pieter.memoire.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.pieter.memoire.Fragments.ThemesFragment;
 import com.example.pieter.memoire.R;
@@ -26,10 +28,9 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+    ThemesFragment themesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fm = getSupportFragmentManager();
         if (fm.findFragmentById(R.id.themesFragmentContainer) == null) {
-            ThemesFragment themesFragment = new ThemesFragment();
+            themesFragment = new ThemesFragment();
             FragmentTransaction transaction = fm.beginTransaction();
             transaction.add(R.id.themesFragmentContainer, themesFragment);
             transaction.commit();
@@ -48,13 +49,23 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        /*.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "EVENT", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                View dialog = getLayoutInflater().inflate(R.layout.dialog_create_theme, null);
+                EditText inputName = (EditText) dialog.findViewById(R.id.input_name);
+                Button btnCreateTheme = (Button) dialog.findViewById(R.id.btn_create_theme);
+                btnCreateTheme.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View view) {
+                        themesFragment.
+                    }
+                });
+
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
