@@ -42,7 +42,7 @@ public class ThemesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.recycler_view, container, false);
+        View v = inflater.inflate(R.layout.theme_activity, container, false);
         ButterKnife.bind(this, v);
         if (savedInstanceState == null || !savedInstanceState.containsKey("themes")) {
             generateData();

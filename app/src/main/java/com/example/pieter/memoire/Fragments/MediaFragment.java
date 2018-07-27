@@ -1,6 +1,5 @@
 package com.example.pieter.memoire.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.pieter.memoire.Activities.ThemeActivity;
 import com.example.pieter.memoire.Adapters.MediaAdapter;
 import com.example.pieter.memoire.ClickListeners.ClickListener;
 import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
@@ -36,7 +34,7 @@ public class MediaFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.theme_activity, container, false);
+        View v = inflater.inflate(R.layout.media_activity, container, false);
         ButterKnife.bind(this, v);
         theme = getArguments().getParcelable("theme");
 
