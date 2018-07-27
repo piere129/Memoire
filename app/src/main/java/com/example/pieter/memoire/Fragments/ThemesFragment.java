@@ -1,5 +1,6 @@
 package com.example.pieter.memoire.Fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,8 @@ import butterknife.ButterKnife;
 public class ThemesFragment extends Fragment {
 
     private List<Theme> themesList = new ArrayList<>();
+    RecyclerView themesRecyclerView;
+    ThemeAdapter themeAdapter;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -49,11 +53,11 @@ public class ThemesFragment extends Fragment {
         } else {
             themesList = savedInstanceState.getParcelableArrayList("themes");
         }
-        final ThemeAdapter themeAdapter = new ThemeAdapter(themesList, getActivity());
+        themeAdapter = new ThemeAdapter(themesList, getActivity());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
-        final RecyclerView themesRecyclerView = (RecyclerView) v.findViewById(R.id.themeRecyclerView);
+        themesRecyclerView = (RecyclerView) v.findViewById(R.id.themeRecyclerView);
 
         themesRecyclerView.setAdapter(themeAdapter);
         themesRecyclerView.setLayoutManager(layoutManager);
@@ -94,17 +98,16 @@ public class ThemesFragment extends Fragment {
             }
         });
 
-
         themesRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), themesRecyclerView, new ClickListener() {
             @Override
             public void onClick(View v, int position) {
 
                 Intent intent = new Intent(getContext(), ThemeActivity.class);
                 Theme t = themesList.get(position);
-                String extra = t.getName();
+                Log.d("wow",Integer.toString(position));
                 intent.putExtra("theme", t);
-                //startactivityforresult to edit changed list of theme object here, pass position!
-                startActivity(intent);
+                intent.putExtra("position",position);
+                startActivityForResult(intent,1);
             }
 
             @Override
@@ -145,5 +148,21 @@ public class ThemesFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelableArrayList("themes", new ArrayList<Theme>(themesList));
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                Theme theme =data.getParcelableExtra("result");
+                int position = data.getIntExtra("position",20) ;
+                Log.d("test",Integer.toString(position));
+                themesList.set(position,theme);
+                themesRecyclerView.getRecycledViewPool().clear();
+                themeAdapter.notifyItemChanged(position);
+            }
+        }
     }
 }

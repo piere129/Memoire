@@ -28,12 +28,14 @@ public class ThemeActivity extends AppCompatActivity {
 
         final Intent intent = getIntent();
         theme = intent.getParcelableExtra("theme");
+        int position = intent.getIntExtra("position",-1);
 
         FragmentManager fm = getSupportFragmentManager();
         if (fm.findFragmentById(R.id.media_fragment_container) == null) {
             mediaFragment = new MediaFragment();
             Bundle bundle = new Bundle();
             bundle.putParcelable("theme", theme);
+            bundle.putInt("position",position);
             mediaFragment.setArguments(bundle);
             FragmentTransaction transaction = fm.beginTransaction();
             //try also with media_container later! media_fragment_container might be unnecessary!
