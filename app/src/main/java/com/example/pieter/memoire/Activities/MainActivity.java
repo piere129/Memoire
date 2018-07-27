@@ -49,24 +49,6 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        /*.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                View dialog = getLayoutInflater().inflate(R.layout.dialog_create_theme, null);
-                EditText inputName = (EditText) dialog.findViewById(R.id.input_name);
-                Button btnCreateTheme = (Button) dialog.findViewById(R.id.btn_create_theme);
-                btnCreateTheme.setOnClickListener(new View.OnClickListener(){
-
-                    @Override
-                    public void onClick(View view) {
-                        themesFragment.
-                    }
-                });
-
-            }
-        });*/
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

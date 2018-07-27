@@ -2,7 +2,6 @@ package com.example.pieter.memoire.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -107,6 +106,7 @@ public class ThemesFragment extends Fragment {
                 Theme t =  themesList.get(position);
                 String extra = t.getName();
                 intent.putExtra("theme", t);
+                //startactivityforresult to edit changed list of theme object here, pass position!
                 startActivity(intent);
             }
 
@@ -120,19 +120,20 @@ public class ThemesFragment extends Fragment {
         return v;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
     private void generateData() {
 
         List<Card> cards = new ArrayList<>();
-        cards.add(new Card(R.drawable.relations, "Card 1"));
+        cards.add(new Card(R.drawable.relations, "Card 1", "Something about relationships"));
+        cards.add(new Card(R.drawable.relations, "Card 2", "Something about life"));
+        cards.add(new Card(R.drawable.relations, "Card 3", "Something about worthiness"));
+        cards.add(new Card(R.drawable.relations, "Card 4", "Something about love"));
+
+
+
         Theme theme1 = new Theme("Relaties", R.drawable.relations, cards);
         themesList.add(theme1);
 
-        Theme theme2 = new Theme("Wonen", R.drawable.firewatch, cards);
+        Theme theme2 = new Theme("Wonen", R.drawable.firewatch);
         themesList.add(theme2);
 
         Theme theme3 = new Theme("Vrijetijd & Dagbesteding", R.drawable.vrijetijd, cards);
