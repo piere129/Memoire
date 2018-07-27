@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
 
 import butterknife.BindView;
@@ -22,9 +23,9 @@ public class ThemeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         final Intent intent = getIntent();
-        String message = intent.getStringExtra("name");
+        Theme theme = intent.getParcelableExtra("theme");
 
-        textView.setText(message);
+        textView.setText(theme.getCards().get(0).getTitle());
     }
 
 }

@@ -1,29 +1,30 @@
 package com.example.pieter.memoire.Models;
 
-import android.widget.ImageView;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Card {
+public class Card implements Parcelable {
 
-    private ImageView image;
+    private int image;
     private String title;
     private String description;
 
-    public Card(ImageView image, String title) {
+    public Card(int image, String title) {
         this.image = image;
         this.title = title;
     }
 
-    public Card(ImageView image, String title, String description) {
+    public Card(int image, String title, String description) {
         this.image = image;
         this.title = title;
         this.description = description;
     }
 
-    public ImageView getImage() {
+    public int getImage() {
         return this.image;
     }
 
-    public void setImage(ImageView image) {
+    public void setImage(int image) {
         this.image = image;
     }
 
@@ -42,4 +43,35 @@ public class Card {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    protected Card(Parcel in) {
+        image = in.readInt();
+        title = in.readString();
+        description = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(image);
+        dest.writeString(title);
+        dest.writeString(description);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Card> CREATOR = new Parcelable.Creator<Card>() {
+        @Override
+        public Card createFromParcel(Parcel in) {
+            return new Card(in);
+        }
+
+        @Override
+        public Card[] newArray(int size) {
+            return new Card[size];
+        }
+    };
 }

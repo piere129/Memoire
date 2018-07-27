@@ -3,11 +3,15 @@ package com.example.pieter.memoire.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Theme implements Parcelable {
 
     private String name;
     private int image;
+    private List<Card> cards;
 
     public Theme() {
     }
@@ -17,9 +21,23 @@ public class Theme implements Parcelable {
     }
 
     public Theme(String name, int image) {
-
         this.name = name;
         this.image = image;
+    }
+
+    public Theme(String name, int image, List<Card> cards)
+    {
+        this.name = name;
+        this.cards = cards;
+        this.image = image;
+    }
+
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
     }
 
     public String getName() {
@@ -41,6 +59,12 @@ public class Theme implements Parcelable {
     protected Theme(Parcel in) {
         name = in.readString();
         image = in.readInt();
+        if (in.readByte() == 0x01) {
+            cards = new ArrayList<Card>();
+            in.readList(cards, Card.class.getClassLoader());
+        } else {
+            cards = null;
+        }
     }
 
     @Override
@@ -52,6 +76,12 @@ public class Theme implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeInt(image);
+        if (cards == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(cards);
+        }
     }
 
     @SuppressWarnings("unused")
