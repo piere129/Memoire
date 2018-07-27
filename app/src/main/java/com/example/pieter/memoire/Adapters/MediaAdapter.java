@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.R;
 import com.example.pieter.memoire.ViewHolders.MediaViewHolder;
-import com.example.pieter.memoire.ViewHolders.ThemesViewHolder;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaViewHolder> {
     @Override
     public int getItemCount() {
         {
-            if(list != null) {
+            if (list != null) {
                 return list.size();
             }
             return 0;

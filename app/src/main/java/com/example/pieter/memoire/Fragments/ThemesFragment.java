@@ -44,11 +44,9 @@ public class ThemesFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.recycler_view, container, false);
         ButterKnife.bind(this, v);
-        if(savedInstanceState == null || !savedInstanceState.containsKey("themes")) {
+        if (savedInstanceState == null || !savedInstanceState.containsKey("themes")) {
             generateData();
-        }
-        else
-        {
+        } else {
             themesList = savedInstanceState.getParcelableArrayList("themes");
         }
         final ThemeAdapter themeAdapter = new ThemeAdapter(themesList, getActivity());
@@ -64,7 +62,7 @@ public class ThemesFragment extends Fragment {
         itemAnimator.setRemoveDuration(1000);
         themesRecyclerView.setItemAnimator(itemAnimator);
 
-        fab.setOnClickListener(new View.OnClickListener(){
+        fab.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -77,25 +75,24 @@ public class ThemesFragment extends Fragment {
 
                 final AlertDialog dialog = builder.show();
 
-                btnCreateTheme.setOnClickListener(new View.OnClickListener(){
+                btnCreateTheme.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View view) {
-                        if(!inputName.getText().toString().isEmpty()) {
+                        if (!inputName.getText().toString().isEmpty()) {
                             Theme t = new Theme(inputName.getText().toString());
                             themesList.add(t);
                             themeAdapter.notifyItemInserted(themesList.size() - 1);
                             dialog.dismiss();
 
-                        }
-                        else {
-                            Toast.makeText(getContext(),"Please fill in the name field!",Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getContext(), "Please fill in the name field!", Toast.LENGTH_LONG).show();
                         }
                     }
-            });
+                });
 
-        }});
-
+            }
+        });
 
 
         themesRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), themesRecyclerView, new ClickListener() {
@@ -103,7 +100,7 @@ public class ThemesFragment extends Fragment {
             public void onClick(View v, int position) {
 
                 Intent intent = new Intent(getContext(), ThemeActivity.class);
-                Theme t =  themesList.get(position);
+                Theme t = themesList.get(position);
                 String extra = t.getName();
                 intent.putExtra("theme", t);
                 //startactivityforresult to edit changed list of theme object here, pass position!
@@ -129,7 +126,6 @@ public class ThemesFragment extends Fragment {
         cards.add(new Card(R.drawable.relations, "Card 4", "Something about love"));
 
 
-
         Theme theme1 = new Theme("Relaties", R.drawable.relations, cards);
         themesList.add(theme1);
 
@@ -147,7 +143,7 @@ public class ThemesFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelableArrayList("themes",  new ArrayList<Theme>(themesList));
+        outState.putParcelableArrayList("themes", new ArrayList<Theme>(themesList));
         super.onSaveInstanceState(outState);
     }
 }

@@ -39,7 +39,10 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
 
     @Override
     public int getItemCount() {
-        return list.size();
+        if (list != null) {
+            return list.size();
+        }
+        return 0;
     }
 
 }

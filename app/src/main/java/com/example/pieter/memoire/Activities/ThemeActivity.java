@@ -33,7 +33,7 @@ public class ThemeActivity extends AppCompatActivity {
         if (fm.findFragmentById(R.id.media_fragment_container) == null) {
             mediaFragment = new MediaFragment();
             Bundle bundle = new Bundle();
-            bundle.putParcelable("theme",theme);
+            bundle.putParcelable("theme", theme);
             mediaFragment.setArguments(bundle);
             FragmentTransaction transaction = fm.beginTransaction();
             //try also with media_container later! media_fragment_container might be unnecessary!

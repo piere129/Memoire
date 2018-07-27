@@ -36,13 +36,13 @@ public class MediaFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v =  inflater.inflate(R.layout.theme_activity, container, false);
-        ButterKnife.bind(this,v);
+        View v = inflater.inflate(R.layout.theme_activity, container, false);
+        ButterKnife.bind(this, v);
         theme = getArguments().getParcelable("theme");
 
 
-        final MediaAdapter adapter = new MediaAdapter(theme.getCards(),getActivity());
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(),2);
+        final MediaAdapter adapter = new MediaAdapter(theme.getCards(), getActivity());
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
         final RecyclerView mediaRecyclerView = (RecyclerView) v.findViewById(R.id.photosRecyclerView);
@@ -57,19 +57,19 @@ public class MediaFragment extends Fragment {
         fab_photos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(),"test",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
             }
         });
 
         mediaRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), mediaRecyclerView, new ClickListener() {
             @Override
             public void onClick(View v, int position) {
-                Toast.makeText(getActivity(),"short tap",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "short tap", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onLongClick(View v, int position) {
-                Toast.makeText(getActivity(),"long tap",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "long tap", Toast.LENGTH_SHORT).show();
 
             }
         }));

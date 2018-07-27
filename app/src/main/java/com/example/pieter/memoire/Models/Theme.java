@@ -25,8 +25,7 @@ public class Theme implements Parcelable {
         this.image = image;
     }
 
-    public Theme(String name, int image, List<Card> cards)
-    {
+    public Theme(String name, int image, List<Card> cards) {
         this.name = name;
         this.cards = cards;
         this.image = image;

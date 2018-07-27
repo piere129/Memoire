@@ -14,11 +14,11 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MediaViewHolder  extends RecyclerView.ViewHolder {
+public class MediaViewHolder extends RecyclerView.ViewHolder {
 
     public MediaViewHolder(View itemView) {
         super(itemView);
-        ButterKnife.bind(this,itemView);
+        ButterKnife.bind(this, itemView);
     }
 
     @BindView(R.id.cardview_media)

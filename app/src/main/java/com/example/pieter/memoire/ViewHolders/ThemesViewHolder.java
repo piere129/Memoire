@@ -29,10 +29,9 @@ public class ThemesViewHolder extends RecyclerView.ViewHolder {
 
     public void setData(Theme theme) {
         name.setText(theme.getName());
-        if(theme.getImage() != 0) {
+        if (theme.getImage() != 0) {
             Picasso.get().load(theme.getImage()).resize(300, 300).centerCrop().into(imageView);
-        }
-        else {
+        } else {
             Picasso.get().load(R.drawable.default_image).resize(300, 300).centerCrop().into(imageView);
         }
     }
