@@ -2,6 +2,7 @@ package com.example.pieter.memoire.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -43,7 +44,13 @@ public class ThemesFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.recycler_view, container, false);
         ButterKnife.bind(this, v);
-        generateData();
+        if(savedInstanceState == null || !savedInstanceState.containsKey("themes")) {
+            generateData();
+        }
+        else
+        {
+            themesList = savedInstanceState.getParcelableArrayList("themes");
+        }
         final ThemeAdapter themeAdapter = new ThemeAdapter(themesList, getActivity());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -133,5 +140,9 @@ public class ThemesFragment extends Fragment {
         //load other themes v
     }
 
-    
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelableArrayList("themes",  new ArrayList<Theme>(themesList));
+        super.onSaveInstanceState(outState);
+    }
 }
