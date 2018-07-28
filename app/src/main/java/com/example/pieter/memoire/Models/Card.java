@@ -3,6 +3,8 @@ package com.example.pieter.memoire.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.pieter.memoire.R;
+
 public class Card implements Parcelable {
 
     private int image;
@@ -23,6 +25,7 @@ public class Card implements Parcelable {
     public Card( String title, String description) {
         this.title = title;
         this.description = description;
+        this.image = R.drawable.default_image_card;
     }
 
     public int getImage() {

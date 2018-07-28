@@ -14,6 +14,7 @@ public class Theme implements Parcelable {
     private List<Card> cards;
 
     public Theme() {
+        cards = new ArrayList<Card>();
     }
 
     public Theme(String name) {
@@ -23,12 +24,14 @@ public class Theme implements Parcelable {
     public Theme(String name, int image) {
         this.name = name;
         this.image = image;
+        cards = new ArrayList<Card>();
     }
 
     public Theme(String name, int image, List<Card> cards) {
         this.name = name;
         this.cards = cards;
         this.image = image;
+        cards = new ArrayList<Card>();
     }
 
     public List<Card> getCards() {
@@ -55,7 +58,9 @@ public class Theme implements Parcelable {
         this.image = image;
     }
 
-    public void addCardToList(Card card) {this.cards.add(card);}
+    public void addCardToList(Card card) {
+        this.cards.add(card);
+    }
 
     public void deleteCardFromList(int position) {this.cards.remove(position);}
 

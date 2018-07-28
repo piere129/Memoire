@@ -123,10 +123,10 @@ public class ThemesFragment extends Fragment {
     private void generateData() {
 
         List<Card> cards = new ArrayList<>();
-        cards.add(new Card(R.drawable.relations, "Card 1", "Something about relationships"));
-        cards.add(new Card(R.drawable.relations, "Card 2", "Something about life"));
-        cards.add(new Card(R.drawable.relations, "Card 3", "Something about worthiness"));
-        cards.add(new Card(R.drawable.relations, "Card 4", "Something about love"));
+        cards.add(new Card( "Card 1", "Something about relationships"));
+        cards.add(new Card(R.drawable.health, "Card 2", "Something about life"));
+        cards.add(new Card(R.drawable.firewatch, "Card 3", "Something about worthiness"));
+        cards.add(new Card(R.drawable.vrijetijd, "Card 4", "Something about love"));
 
 
         Theme theme1 = new Theme("Relaties", R.drawable.relations, cards);

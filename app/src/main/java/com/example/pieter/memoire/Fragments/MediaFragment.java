@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
 import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
+import com.example.pieter.memoire.Utilities.GridAutofitLayoutManager;
 
 import java.util.List;
 
@@ -77,7 +79,7 @@ public class MediaFragment extends Fragment {
         });
 
         final MediaAdapter adapter = new MediaAdapter(theme.getCards(), getActivity());
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        RecyclerView.LayoutManager layoutManager = new GridAutofitLayoutManager(getActivity(),400);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
         final RecyclerView mediaRecyclerView = (RecyclerView) v.findViewById(R.id.photosRecyclerView);
