@@ -3,6 +3,7 @@ package com.example.pieter.memoire.Fragments;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.pieter.memoire.Activities.MainActivity;
@@ -87,7 +92,27 @@ public class MediaFragment extends Fragment {
         fab_photos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                final View dialogview = getLayoutInflater().inflate(R.layout.dialog_create_media, null);
+                final EditText inputTitle = (EditText) dialogview.findViewById(R.id.input_title);
+                final EditText inputDescription = (EditText) dialogview.findViewById(R.id.input_description);
+                ImageView image = (ImageView) dialogview.findViewById(R.id.input_media);
+                Button btnCreateTheme = (Button) dialogview.findViewById(R.id.btn_create_media);
+                builder.setView(dialogview);
+
+                final AlertDialog dialog = builder.show();
+                btnCreateTheme.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Card card = new Card(inputTitle.getText().toString(),inputDescription.getText().toString());
+                        theme.addCardToList(card);
+                        mediaRecyclerView.getRecycledViewPool().clear();
+                        adapter.notifyItemInserted(theme.getCards().size() -1);
+                        dialog.dismiss();
+                    }
+                });
+
+
             }
         });
 
@@ -99,9 +124,7 @@ public class MediaFragment extends Fragment {
 
             @Override
             public void onLongClick(View v, int position) {
-                List<Card> cards = theme.getCards();
-                cards.remove(position);
-                theme.setCards(cards);
+                theme.deleteCardFromList(position);
                 mediaRecyclerView.getRecycledViewPool().clear();
                 adapter.notifyItemRemoved(position);
             }

@@ -115,7 +115,6 @@ public class ThemesFragment extends Fragment {
                 themesList.remove(position);
                 themesRecyclerView.getRecycledViewPool().clear();
                 themeAdapter.notifyItemRemoved(position);
-                Log.d("test","test");
             }
         }));
         return v;

@@ -20,6 +20,11 @@ public class Card implements Parcelable {
         this.description = description;
     }
 
+    public Card( String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
+
     public int getImage() {
         return this.image;
     }

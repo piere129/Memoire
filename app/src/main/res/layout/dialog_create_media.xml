@@ -6,17 +6,17 @@
     android:padding="15dp">
 
     <TextView
-        android:id="@+id/textView_theme_header"
+        android:id="@+id/textView_media_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:text="Create new theme"
+        android:text="Create new media card"
         android:textSize="24sp"
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/input_name"
+        android:id="@+id/input_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -26,10 +26,27 @@
         android:inputType="textPersonName"
         android:textAlignment="center" />
 
+    <ImageView
+        android:id="@+id/input_media"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/card_description" />
+
+    <EditText
+        android:id="@+id/input_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="Description"
+        android:inputType="textPersonName"
+        android:textAlignment="center" />
+
     <Button
-        android:id="@+id/btn_create_theme"
+        android:id="@+id/btn_create_media"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Create Theme" />
+        android:text="Create Card" />
 </LinearLayout>

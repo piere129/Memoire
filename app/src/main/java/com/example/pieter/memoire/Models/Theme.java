@@ -55,6 +55,10 @@ public class Theme implements Parcelable {
         this.image = image;
     }
 
+    public void addCardToList(Card card) {this.cards.add(card);}
+
+    public void deleteCardFromList(int position) {this.cards.remove(position);}
+
     protected Theme(Parcel in) {
         name = in.readString();
         image = in.readInt();
