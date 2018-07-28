@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.pieter.memoire.Activities.ThemeActivity;
@@ -54,13 +56,14 @@ public class ThemesFragment extends Fragment {
             themesList = savedInstanceState.getParcelableArrayList("themes");
         }
         themeAdapter = new ThemeAdapter(themesList, getActivity());
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),layoutManager.getOrientation());
         themesRecyclerView = (RecyclerView) v.findViewById(R.id.themeRecyclerView);
 
         themesRecyclerView.setAdapter(themeAdapter);
         themesRecyclerView.setLayoutManager(layoutManager);
+        themesRecyclerView.addItemDecoration(dividerItemDecoration);
 
         itemAnimator.setAddDuration(1000);
         itemAnimator.setRemoveDuration(1000);
@@ -103,6 +106,7 @@ public class ThemesFragment extends Fragment {
             public void onClick(View v, int position) {
 
                 Intent intent = new Intent(getContext(), ThemeActivity.class);
+                getActivity().overridePendingTransition(R.anim.start, R.anim.end);
                 Theme t = themesList.get(position);
                 Log.d("wow",Integer.toString(position));
                 intent.putExtra("theme", t);
@@ -122,23 +126,34 @@ public class ThemesFragment extends Fragment {
 
     private void generateData() {
 
-        List<Card> cards = new ArrayList<>();
-        cards.add(new Card( "Card 1", "Something about relationships"));
-        cards.add(new Card(R.drawable.health, "Card 2", "Something about life"));
-        cards.add(new Card(R.drawable.firewatch, "Card 3", "Something about worthiness"));
-        cards.add(new Card(R.drawable.vrijetijd, "Card 4", "Something about love"));
+        List<Card> cards1 = new ArrayList<>();
+        cards1.add(new Card(R.drawable.firewatch, "Card 1", "Something about relationships"));
+        cards1.add(new Card(R.drawable.health, "Card 2", "Something about life"));
+        cards1.add(new Card(R.drawable.vrijetijd, "Card 3", "Something about love"));
+        cards1.add(new Card( "Card 4", "Something about nothing"));
+
+        List<Card> cards2 = new ArrayList<>();
+        cards2.add(new Card(R.drawable.vrijetijd, "Card 1", "Something about life"));
+        cards2.add(new Card(R.drawable.firewatch, "Card 2", "Something about living"));
+        cards2.add(new Card(R.drawable.health, "Card 3", "Something about life"));
+
+        List<Card> cards3 = new ArrayList<>();
+        cards3.add(new Card(R.drawable.health, "Card 3", "Something about life"));
+        cards3.add(new Card(R.drawable.vrijetijd, "Card 1", "Something about life"));
+        cards3.add(new Card(R.drawable.firewatch, "Card 2", "Something about living"));
 
 
-        Theme theme1 = new Theme("Relaties", R.drawable.relations, cards);
+
+        Theme theme1 = new Theme("Relaties");
         themesList.add(theme1);
 
-        Theme theme2 = new Theme("Wonen", R.drawable.firewatch);
+        Theme theme2 = new Theme("Wonen", cards1);
         themesList.add(theme2);
 
-        Theme theme3 = new Theme("Vrijetijd & Dagbesteding", R.drawable.vrijetijd, cards);
+        Theme theme3 = new Theme("Vrijetijd & Dagbesteding", cards2);
         themesList.add(theme3);
 
-        Theme theme4 = new Theme("Gezondheid & Welzijn", R.drawable.health, cards);
+        Theme theme4 = new Theme("Gezondheid & Welzijn", cards3);
         themesList.add(theme4);
 
         //load other themes v

@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyboardShortcutGroup;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
 import com.example.pieter.memoire.Utilities.GridAutofitLayoutManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -65,11 +67,12 @@ public class MediaFragment extends Fragment {
         Log.d("position1",Integer.toString(position));
 
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_media);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_camera));
+        toolbar.setNavigationIcon(R.drawable.left_arrow);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent returnIntent = new Intent();
+                getActivity().overridePendingTransition(R.anim.end, R.anim.start);
                 returnIntent.putExtra("result",theme);
                 returnIntent.putExtra("position",position);
                 Log.d("positionInFragment2",Integer.toString(position));

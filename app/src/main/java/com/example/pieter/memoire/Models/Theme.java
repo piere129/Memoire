@@ -3,6 +3,8 @@ package com.example.pieter.memoire.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.pieter.memoire.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,6 @@ import java.util.List;
 public class Theme implements Parcelable {
 
     private String name;
-    private int image;
     private List<Card> cards;
 
     public Theme() {
@@ -19,19 +20,13 @@ public class Theme implements Parcelable {
 
     public Theme(String name) {
         this.name = name;
-    }
-
-    public Theme(String name, int image) {
-        this.name = name;
-        this.image = image;
         cards = new ArrayList<Card>();
     }
 
-    public Theme(String name, int image, List<Card> cards) {
+
+    public Theme(String name, List<Card> cards) {
         this.name = name;
         this.cards = cards;
-        this.image = image;
-        cards = new ArrayList<Card>();
     }
 
     public List<Card> getCards() {
@@ -50,14 +45,6 @@ public class Theme implements Parcelable {
         this.name = name;
     }
 
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
-    }
-
     public void addCardToList(Card card) {
         this.cards.add(card);
     }
@@ -66,7 +53,6 @@ public class Theme implements Parcelable {
 
     protected Theme(Parcel in) {
         name = in.readString();
-        image = in.readInt();
         if (in.readByte() == 0x01) {
             cards = new ArrayList<Card>();
             in.readList(cards, Card.class.getClassLoader());
@@ -83,7 +69,6 @@ public class Theme implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
-        dest.writeInt(image);
         if (cards == null) {
             dest.writeByte((byte) (0x00));
         } else {
