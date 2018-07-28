@@ -79,12 +79,14 @@ public class MediaFragment extends Fragment {
         });
 
         final MediaAdapter adapter = new MediaAdapter(theme.getCards(), getActivity());
+        final RecyclerView mediaRecyclerView = (RecyclerView) v.findViewById(R.id.photosRecyclerView);
+        mediaRecyclerView.setAdapter(adapter);
+
+        //width is decided by Picasso in viewholder
         RecyclerView.LayoutManager layoutManager = new GridAutofitLayoutManager(getActivity(),400);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
-        final RecyclerView mediaRecyclerView = (RecyclerView) v.findViewById(R.id.photosRecyclerView);
 
-        mediaRecyclerView.setAdapter(adapter);
         mediaRecyclerView.setLayoutManager(layoutManager);
 
         itemAnimator.setAddDuration(1000);

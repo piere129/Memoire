@@ -17,6 +17,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaViewHolder> {
 
     private List<Card> list;
     private Context context;
+    MediaViewHolder mediaViewHolder;
 
     public MediaAdapter(List<Card> list, Context context) {
         this.list = list;
@@ -27,7 +28,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaViewHolder> {
     @Override
     public MediaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.media_activity_card, parent, false);
-        MediaViewHolder mediaViewHolder = new MediaViewHolder(v);
+        mediaViewHolder = new MediaViewHolder(v);
         return mediaViewHolder;
     }
 

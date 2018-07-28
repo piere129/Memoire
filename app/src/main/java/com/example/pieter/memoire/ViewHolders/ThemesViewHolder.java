@@ -15,6 +15,8 @@ import butterknife.ButterKnife;
 
 public class ThemesViewHolder extends RecyclerView.ViewHolder {
 
+    private int size = 1080;
+
     @BindView(R.id.cardview)
     CardView themeWrapper;
     @BindView(R.id.card_title)
@@ -30,9 +32,9 @@ public class ThemesViewHolder extends RecyclerView.ViewHolder {
     public void setData(Theme theme) {
         name.setText(theme.getName());
         if (theme.getImage() != 0) {
-            Picasso.get().load(theme.getImage()).resize(300, 300).centerCrop().into(imageView);
+            Picasso.get().load(theme.getImage()).resize(size, size).centerCrop().into(imageView);
         } else {
-            Picasso.get().load(R.drawable.default_image).resize(300, 300).centerCrop().into(imageView);
+            Picasso.get().load(R.drawable.default_image).resize(size, size).centerCrop().into(imageView);
         }
     }
 }
