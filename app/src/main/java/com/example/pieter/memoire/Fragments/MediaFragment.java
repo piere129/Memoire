@@ -111,11 +111,15 @@ public class MediaFragment extends Fragment {
                 btnCreateTheme.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Card card = new Card(inputTitle.getText().toString(),inputDescription.getText().toString());
-                        theme.addCardToList(card);
-                        mediaRecyclerView.getRecycledViewPool().clear();
-                        adapter.notifyItemInserted(theme.getCards().size() -1);
-                        dialog.dismiss();
+                        if(inputTitle.getText().toString().isEmpty())
+                        { Toast.makeText(getActivity(),"Name field can't be empty!", Toast.LENGTH_SHORT).show();}
+                        else {
+                            Card card = new Card(inputTitle.getText().toString(), inputDescription.getText().toString());
+                            theme.addCardToList(card);
+                            mediaRecyclerView.getRecycledViewPool().clear();
+                            adapter.notifyItemInserted(theme.getCards().size() - 1);
+                            dialog.dismiss();
+                        }
                     }
                 });
 
