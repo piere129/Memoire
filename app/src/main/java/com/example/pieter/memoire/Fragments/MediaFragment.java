@@ -18,12 +18,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.pieter.memoire.Activities.TestActivity;
 import com.example.pieter.memoire.Adapters.MediaAdapter;
 import com.example.pieter.memoire.ClickListeners.ClickListener;
 import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
@@ -31,6 +35,9 @@ import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
 import com.example.pieter.memoire.Utilities.GridAutofitLayoutManager;
+
+import java.lang.reflect.Array;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,8 +50,6 @@ public class MediaFragment extends Fragment {
 
     Theme theme;
     int position;
-
-    Integer GALLERY = 0, CAMERA = 1, FLICKR = 2;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -94,22 +99,39 @@ public class MediaFragment extends Fragment {
         fab_photos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 final View dialogview = getLayoutInflater().inflate(R.layout.dialog_create_media, null);
                 final EditText inputTitle = (EditText) dialogview.findViewById(R.id.input_title);
                 final EditText inputDescription = (EditText) dialogview.findViewById(R.id.input_description);
                 ImageView image = (ImageView) dialogview.findViewById(R.id.input_media);
-                ImageButton btnAddImage = (ImageButton) dialogview.findViewById(R.id.btn_choose_image);
-
-                btnAddImage.setOnClickListener(new View.OnClickListener() {
+                final Spinner spinner = (Spinner) dialogview.findViewById(R.id.spinner);
+                ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+                        getContext(), R.array.options, android.R.layout.simple_spinner_item);
+                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(spinnerAdapter);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        final View dialogview = getLayoutInflater().inflate(R.layout.test, null);
-                        final AlertDialog dialog = builder.show();
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        Toast.makeText(getContext(),"position:" + spinner.getSelectedItemPosition(),Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
                     }
                 });
 
+                Button btnImportMedia = (Button) dialogview.findViewById(R.id.btn_import_media);
+
+                btnImportMedia.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getContext(), TestActivity.class);
+                        startActivity(intent);
+
+                    }
+                });
                 Button btnCreateTheme = (Button) dialogview.findViewById(R.id.btn_create_media);
                 builder.setView(dialogview);
 
@@ -148,9 +170,5 @@ public class MediaFragment extends Fragment {
         }));
 
         return v;
-    }
-
-    private void selectImage(){
-        final CharSequence[] items = {"Camera","Gallery","Flickr"};
     }
 }

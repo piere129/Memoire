@@ -9,5 +9,11 @@
     <string name="card_title">Title</string>
     <string name="card_description">Description</string>
     <string name="title_activity_theme">ThemeActivity</string>
+    <string-array name="options">
+        <item> Camera </item>
+        <item> Photo Gallery </item>
+        <item> Video gallery </item>
+        <item> Flickr </item>
+    </string-array>
 
 </resources>
