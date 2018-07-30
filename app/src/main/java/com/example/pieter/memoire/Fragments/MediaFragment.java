@@ -79,8 +79,8 @@ public class MediaFragment extends Fragment {
         getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
         theme = getArguments().getParcelable("theme");
-        position = getArguments().getInt("position",-1);
-        Log.d("position1",Integer.toString(position));
+        position = getArguments().getInt("position", -1);
+        Log.d("position1", Integer.toString(position));
 
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_media);
         toolbar.setNavigationIcon(R.drawable.left_arrow);
@@ -89,10 +89,10 @@ public class MediaFragment extends Fragment {
             public void onClick(View v) {
                 Intent returnIntent = new Intent();
                 getActivity().overridePendingTransition(R.anim.end, R.anim.start);
-                returnIntent.putExtra("result",theme);
-                returnIntent.putExtra("position",position);
-                Log.d("positionInFragment2",Integer.toString(position));
-                getActivity().setResult(RESULT_OK,returnIntent);
+                returnIntent.putExtra("result", theme);
+                returnIntent.putExtra("position", position);
+                Log.d("positionInFragment2", Integer.toString(position));
+                getActivity().setResult(RESULT_OK, returnIntent);
                 getActivity().finish();
             }
         });
@@ -102,7 +102,7 @@ public class MediaFragment extends Fragment {
         mediaRecyclerView.setAdapter(adapter);
 
         //width is decided by Picasso in viewholder
-        RecyclerView.LayoutManager layoutManager = new GridAutofitLayoutManager(getActivity(),400);
+        RecyclerView.LayoutManager layoutManager = new GridAutofitLayoutManager(getActivity(), 400);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
 
@@ -116,11 +116,13 @@ public class MediaFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                uri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card");
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 final View dialogview = getLayoutInflater().inflate(R.layout.dialog_create_media, null);
                 final EditText inputTitle = (EditText) dialogview.findViewById(R.id.input_title);
                 final EditText inputDescription = (EditText) dialogview.findViewById(R.id.input_description);
                 dialogImage = (ImageView) dialogview.findViewById(R.id.input_media);
+                dialogImage.setImageURI(uri);
                 final Spinner spinner = (Spinner) dialogview.findViewById(R.id.spinner);
                 ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
                         getContext(), R.array.options, android.R.layout.simple_spinner_item);
@@ -129,7 +131,7 @@ public class MediaFragment extends Fragment {
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        Toast.makeText(getContext(),"position:" + spinner.getSelectedItemPosition(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "position:" + spinner.getSelectedItemPosition(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -144,9 +146,20 @@ public class MediaFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                            verifyPermissions();
-                            Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(takePicture, 0);//zero can be replaced with any action code
+                        verifyPermissions();
+                        switch (spinner.getSelectedItemPosition()) {
+                            case 0:
+                                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(takePicture, 0);
+                                break;//zero can be replaced with any action code}
+
+                            case 1:
+                                Intent choosePicture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                                startActivityForResult(choosePicture, 1);
+                                break;//zero can be replaced with any action code}
+
+                        }
+
 
                     }
                 });
@@ -154,12 +167,14 @@ public class MediaFragment extends Fragment {
                 builder.setView(dialogview);
 
                 final AlertDialog dialog = builder.show();
-                btnCreateTheme.setOnClickListener(new View.OnClickListener() {
+                btnCreateTheme.setOnClickListener(new View.OnClickListener()
+
+                {
                     @Override
                     public void onClick(View view) {
-                        if(inputTitle.getText().toString().isEmpty() || inputDescription.getText().toString().isEmpty())
-                        { Toast.makeText(getActivity(),"Name and Description field can't be empty!", Toast.LENGTH_SHORT).show();}
-                        else {
+                        if (inputTitle.getText().toString().isEmpty() || inputDescription.getText().toString().isEmpty()) {
+                            Toast.makeText(getActivity(), "Name and Description field can't be empty!", Toast.LENGTH_SHORT).show();
+                        } else {
                             Card card = new Card(uri.toString(), inputTitle.getText().toString(), inputDescription.getText().toString());
                             theme.addCardToList(card);
                             mediaRecyclerView.getRecycledViewPool().clear();
@@ -173,19 +188,23 @@ public class MediaFragment extends Fragment {
             }
         });
 
-        mediaRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), mediaRecyclerView, new ClickListener() {
-            @Override
-            public void onClick(View v, int position) {
-                Toast.makeText(getActivity(), "short tap", Toast.LENGTH_SHORT).show();
-            }
+        mediaRecyclerView.addOnItemTouchListener(new
 
-            @Override
-            public void onLongClick(View v, int position) {
-                theme.deleteCardFromList(position);
-                mediaRecyclerView.getRecycledViewPool().clear();
-                adapter.notifyItemRemoved(position);
-            }
-        }));
+                ItemTouchListener(getContext(), mediaRecyclerView, new
+
+                ClickListener() {
+                    @Override
+                    public void onClick(View v, int position) {
+                        Toast.makeText(getActivity(), "short tap", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onLongClick(View v, int position) {
+                        theme.deleteCardFromList(position);
+                        mediaRecyclerView.getRecycledViewPool().clear();
+                        adapter.notifyItemRemoved(position);
+                    }
+                }));
 
         return v;
     }
@@ -193,29 +212,43 @@ public class MediaFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-            dialogImage.setImageBitmap(imageBitmap);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    saveImage(data);
+                }break;
 
-            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-            uri = getImageUri(getContext(), imageBitmap);
-
-            // CALL THIS METHOD TO GET THE ACTUAL PATH
-            Toast.makeText(getActivity(),"Here "+ getRealPathFromURI(uri),Toast.LENGTH_LONG).show();
+            case 1: {
+                if (resultCode == RESULT_OK) {
+                    uri = data.getData();
+                    dialogImage.setImageURI(uri);
+                }break;
             }
-
+        }
     }
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
+    private void saveImage(Intent data) {
+        Bundle extras = data.getExtras();
+        Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+        dialogImage.setImageBitmap(imageBitmap);
+        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+        uri = getImageUri(getContext(), imageBitmap);
+
+        // CALL THIS METHOD TO GET THE ACTUAL PATH
+        Toast.makeText(getActivity(), "Here " + getRealPathFromURI(uri), Toast.LENGTH_LONG).show();
+    }
+
+
+    private Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
 
-    public String getRealPathFromURI(Uri uri) {
+    private String getRealPathFromURI(Uri uri) {
         Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
         int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
@@ -227,15 +260,13 @@ public class MediaFragment extends Fragment {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
         if (ContextCompat.checkSelfPermission(
-                getActivity().getApplicationContext(),permissions[0])== PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),permissions[1])== PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),permissions[2])==
-                        PackageManager.PERMISSION_GRANTED)
-        {
-            Log.d("granted","permissions granted already!");
-        }
-        else{
-            ActivityCompat.requestPermissions(getActivity(), permissions,22);
+                getActivity().getApplicationContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), permissions[1]) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), permissions[2]) ==
+                        PackageManager.PERMISSION_GRANTED) {
+            Log.d("granted", "permissions granted already!");
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), permissions, 22);
         }
     }
 }
