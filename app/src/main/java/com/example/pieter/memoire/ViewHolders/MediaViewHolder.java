@@ -1,6 +1,7 @@
 package com.example.pieter.memoire.ViewHolders;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -39,11 +40,13 @@ public class MediaViewHolder extends RecyclerView.ViewHolder {
         //title.setText(card.getTitle());
        // description.setText(card.getDescription());
 
-        if(card.getImage() != 0) {
-            Picasso.get().load(card.getImage()).resize(size, size).centerCrop().into(imageView);
+        if(card.getImageUri().isEmpty() || card.getImageUri() == null) {
+            Picasso.get().load(R.drawable.default_image_card).resize(size, size).centerCrop().into(imageView);
+
         }
         else {
-            Picasso.get().load(R.drawable.default_image_card).resize(size, size).centerCrop().into(imageView);
+            Uri uri = Uri.parse(card.getImageUri());
+            Picasso.get().load(uri).resize(size, size).centerCrop().into(imageView);
         }
 
     }

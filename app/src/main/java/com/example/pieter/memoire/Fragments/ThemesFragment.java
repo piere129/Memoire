@@ -126,7 +126,7 @@ public class ThemesFragment extends Fragment {
 
     private void generateData() {
 
-        List<Card> cards1 = new ArrayList<>();
+       /* List<Card> cards1 = new ArrayList<>();
         cards1.add(new Card(R.drawable.firewatch, "Card 1", "Something about relationships"));
         cards1.add(new Card(R.drawable.health, "Card 2", "Something about life"));
         cards1.add(new Card(R.drawable.vrijetijd, "Card 3", "Something about love"));
@@ -140,20 +140,20 @@ public class ThemesFragment extends Fragment {
         List<Card> cards3 = new ArrayList<>();
         cards3.add(new Card(R.drawable.health, "Card 3", "Something about life"));
         cards3.add(new Card(R.drawable.vrijetijd, "Card 1", "Something about life"));
-        cards3.add(new Card(R.drawable.firewatch, "Card 2", "Something about living"));
+        cards3.add(new Card(R.drawable.firewatch, "Card 2", "Something about living"));*/
 
 
 
         Theme theme1 = new Theme("Relaties");
         themesList.add(theme1);
 
-        Theme theme2 = new Theme("Wonen", cards1);
+        Theme theme2 = new Theme("Wonen"/*, cards1*/);
         themesList.add(theme2);
 
-        Theme theme3 = new Theme("Vrijetijd & Dagbesteding", cards2);
+        Theme theme3 = new Theme("Vrijetijd & Dagbesteding" /*, cards2*/);
         themesList.add(theme3);
 
-        Theme theme4 = new Theme("Gezondheid & Welzijn", cards3);
+        Theme theme4 = new Theme("Gezondheid & Welzijn" /*,cards3*/);
         themesList.add(theme4);
 
         //load other themes v

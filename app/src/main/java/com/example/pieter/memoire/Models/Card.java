@@ -1,5 +1,6 @@
 package com.example.pieter.memoire.Models;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,33 +8,29 @@ import com.example.pieter.memoire.R;
 
 public class Card implements Parcelable {
 
-    private int image;
+    private String imageUri;
     private String title;
     private String description;
 
-    public Card(int image, String title) {
-        this.image = image;
-        this.title = title;
-    }
-
-    public Card(int image, String title, String description) {
-        this.image = image;
+    public Card(String imageUri, String title, String description) {
+        this.imageUri = imageUri;
         this.title = title;
         this.description = description;
     }
 
-    public Card( String title, String description) {
+    public Card(String title, String description) {
         this.title = title;
         this.description = description;
-        this.image = R.drawable.default_image_card;
+        this.imageUri = null;
+        ;
     }
 
-    public int getImage() {
-        return this.image;
+    public String getImageUri() {
+        return this.imageUri;
     }
 
-    public void setImage(int image) {
-        this.image = image;
+    public void setImageUri(String image) {
+        this.imageUri = imageUri;
     }
 
     public String getTitle() {
@@ -52,8 +49,9 @@ public class Card implements Parcelable {
         this.description = description;
     }
 
+
     protected Card(Parcel in) {
-        image = in.readInt();
+        imageUri = in.readString();
         title = in.readString();
         description = in.readString();
     }
@@ -65,7 +63,7 @@ public class Card implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(image);
+        dest.writeString(imageUri);
         dest.writeString(title);
         dest.writeString(description);
     }
