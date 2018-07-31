@@ -1,12 +1,16 @@
 package com.example.pieter.memoire.ViewHolders;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
@@ -18,7 +22,8 @@ import butterknife.ButterKnife;
 
 public class MediaViewHolder extends RecyclerView.ViewHolder {
 
-    private int size = 400;
+    //in dp
+    private int size = 120;
 
     public MediaViewHolder(View itemView) {
         super(itemView);
@@ -31,6 +36,9 @@ public class MediaViewHolder extends RecyclerView.ViewHolder {
     TextView title;*/
     @BindView(R.id.media_image_grid)
     ImageView imageView;
+
+    @BindView(R.id.play_button_video)
+    ImageView overlay;
    /* @BindView(R.id.media_description)
 
     TextView description;*/
@@ -40,13 +48,21 @@ public class MediaViewHolder extends RecyclerView.ViewHolder {
         //title.setText(card.getTitle());
        // description.setText(card.getDescription());
 
-        if(card.getImageUri().isEmpty() || card.getImageUri() == null) {
+        if(card.getUri().isEmpty() || card.getUri() == null) {
             Picasso.get().load(R.drawable.default_image_card).resize(size, size).centerCrop().into(imageView);
 
         }
         else {
-            Uri uri = Uri.parse(card.getImageUri());
-            Picasso.get().load(uri).resize(size, size).centerCrop().into(imageView);
+            Uri uri = Uri.parse(card.getUri());
+            if (!card.getHasVideo()) {
+                Picasso.get().load(uri).fit().centerCrop().into(imageView);
+            }
+            else {
+                Bitmap bitmap2 = ThumbnailUtils.createVideoThumbnail(card.getUri(), MediaStore.Video.Thumbnails.MICRO_KIND);
+                imageView.setImageBitmap(bitmap2);
+                overlay.setVisibility(View.VISIBLE);
+            }
+
         }
 
     }

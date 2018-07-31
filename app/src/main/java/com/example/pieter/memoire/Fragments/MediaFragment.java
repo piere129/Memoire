@@ -9,9 +9,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.Image;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,6 +49,7 @@ import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
 import com.example.pieter.memoire.Utilities.GridAutofitLayoutManager;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -68,6 +71,7 @@ public class MediaFragment extends Fragment {
     int position;
     ImageView dialogImage;
     Uri uri;
+    String videoPath;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -160,6 +164,13 @@ public class MediaFragment extends Fragment {
                                 startActivityForResult(choosePicture, 1);
                                 break;//zero can be replaced with any action code}
 
+                            case 2:
+                                Intent intent = new Intent();
+                                intent.setType("video/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent,"Select Video"),2);
+                                Toast.makeText(getActivity(), "lmao", Toast.LENGTH_SHORT).show();
+
                         }
 
 
@@ -174,14 +185,25 @@ public class MediaFragment extends Fragment {
                 {
                     @Override
                     public void onClick(View view) {
+                        Card card;
                         if (inputTitle.getText().toString().isEmpty() || inputDescription.getText().toString().isEmpty()) {
                             Toast.makeText(getActivity(), "Name and Description field can't be empty!", Toast.LENGTH_SHORT).show();
                         } else {
-                            Card card = new Card(uri.toString(), inputTitle.getText().toString(), inputDescription.getText().toString());
-                            theme.addCardToList(card);
-                            mediaRecyclerView.getRecycledViewPool().clear();
-                            adapter.notifyItemInserted(theme.getCards().size() - 1);
-                            dialog.dismiss();
+                            if(videoPath != null && !videoPath.isEmpty())
+                            {
+                                card = new Card(videoPath, inputTitle.getText().toString(), inputDescription.getText().toString(),true);
+                                theme.addCardToList(card);
+                                mediaRecyclerView.getRecycledViewPool().clear();
+                                adapter.notifyItemInserted(theme.getCards().size() - 1);
+                                dialog.dismiss();
+                            }
+                            else {
+                                card = new Card(uri.toString(), inputTitle.getText().toString(), inputDescription.getText().toString());
+                                theme.addCardToList(card);
+                                mediaRecyclerView.getRecycledViewPool().clear();
+                                adapter.notifyItemInserted(theme.getCards().size() - 1);
+                                dialog.dismiss();
+                            }
                         }
                     }
                 });
@@ -205,7 +227,7 @@ public class MediaFragment extends Fragment {
 
                         titleDetails.setText(theme.getCards().get(position).getTitle());
                         descriptionDetails.setText(theme.getCards().get(position).getDescription());
-                        imageDetails.setImageURI(Uri.parse(theme.getCards().get(position).getImageUri()));
+                        imageDetails.setImageURI(Uri.parse(theme.getCards().get(position).getUri()));
 
                         builder.setView(dialogViewDetails);
                         builder.show();
@@ -222,6 +244,7 @@ public class MediaFragment extends Fragment {
         return v;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -230,15 +253,46 @@ public class MediaFragment extends Fragment {
             case 0:
                 if (resultCode == RESULT_OK) {
                     saveImage(data);
-                }break;
+                    videoPath = null;
+                }
+                break;
 
-            case 1: {
+            case 1:
                 if (resultCode == RESULT_OK) {
                     uri = data.getData();
                     dialogImage.setImageURI(uri);
-                }break;
-            }
+                    videoPath = null;
+                }
+                break;
+            case 2:
+                if(resultCode == RESULT_OK)
+                {
+                     Toast.makeText(getActivity(),getRealPathFromURIForVideo(data.getData()), Toast.LENGTH_LONG).show();
+                    videoPath = getRealPathFromURIForVideo(data.getData());
+                    Bitmap bitmap2 = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Video.Thumbnails.MICRO_KIND);
+                    dialogImage.setImageBitmap(bitmap2);
+                }
+                break;
+
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private String getRealPathFromURIForVideo(Uri selectedVideoUri) {
+        String wholeID = DocumentsContract.getDocumentId(selectedVideoUri);
+        String id = wholeID.split(":")[1];
+
+        String[] column = { MediaStore.Video.Media.DATA };
+        String sel = MediaStore.Video.Media._ID + "=?";
+        Cursor cursor = getContext().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{ id }, null);
+        String filePath = "";
+
+        int columnIndex = cursor.getColumnIndex(column[0]);
+        if (cursor.moveToFirst()) {
+            filePath = cursor.getString(columnIndex);
+        }
+        cursor.close();
+        return filePath;
     }
 
     private void saveImage(Intent data) {
@@ -262,7 +316,7 @@ public class MediaFragment extends Fragment {
     }
 
     private String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
         int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
         return cursor.getString(idx);

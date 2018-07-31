@@ -8,12 +8,20 @@ import com.example.pieter.memoire.R;
 
 public class Card implements Parcelable {
 
-    private String imageUri;
+    private String uri;
     private String title;
     private String description;
+    private boolean hasVideo;
 
-    public Card(String imageUri, String title, String description) {
-        this.imageUri = imageUri;
+    public Card(String uri, String title, String description, boolean hasVideo) {
+        this.uri = uri;
+        this.title = title;
+        this.description = description;
+        this.hasVideo = hasVideo;
+    }
+
+    public Card(String uri, String title, String description) {
+        this.uri = uri;
         this.title = title;
         this.description = description;
     }
@@ -21,15 +29,23 @@ public class Card implements Parcelable {
     public Card(String title, String description) {
         this.title = title;
         this.description = description;
-        this.imageUri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card").toString();
+        this.uri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card").toString();
     }
 
-    public String getImageUri() {
-        return this.imageUri;
+    public boolean getHasVideo() {
+        return hasVideo;
     }
 
-    public void setImageUri(String image) {
-        this.imageUri = imageUri;
+    public void setHasVideo(boolean hasVideo) {
+        this.hasVideo = hasVideo;
+    }
+
+    public String getUri() {
+        return this.uri;
+    }
+
+    public void setUri(String image) {
+        this.uri = uri;
     }
 
     public String getTitle() {
@@ -48,11 +64,11 @@ public class Card implements Parcelable {
         this.description = description;
     }
 
-
     protected Card(Parcel in) {
-        imageUri = in.readString();
+        uri = in.readString();
         title = in.readString();
         description = in.readString();
+        hasVideo = in.readByte() != 0x00;
     }
 
     @Override
@@ -62,9 +78,10 @@ public class Card implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(imageUri);
+        dest.writeString(uri);
         dest.writeString(title);
         dest.writeString(description);
+        dest.writeByte((byte) (hasVideo ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")
