@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pieter.memoire.Activities.MainActivity;
@@ -195,7 +197,18 @@ public class MediaFragment extends Fragment {
                 ClickListener() {
                     @Override
                     public void onClick(View v, int position) {
-                        Toast.makeText(getActivity(), "short tap", Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        final View dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details, null);
+                        final TextView titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details);
+                        final TextView descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details);
+                        ImageView imageDetails = (ImageView) dialogViewDetails.findViewById(R.id.image_details);
+
+                        titleDetails.setText(theme.getCards().get(position).getTitle());
+                        descriptionDetails.setText(theme.getCards().get(position).getDescription());
+                        imageDetails.setImageURI(Uri.parse(theme.getCards().get(position).getImageUri()));
+
+                        builder.setView(dialogViewDetails);
+                        builder.show();
                     }
 
                     @Override
