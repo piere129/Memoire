@@ -21,7 +21,7 @@ public class Card implements Parcelable {
     public Card(String title, String description) {
         this.title = title;
         this.description = description;
-        this.imageUri = null;
+        this.imageUri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card").toString();
         ;
     }
 

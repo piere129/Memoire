@@ -2,6 +2,7 @@ package com.example.pieter.memoire.Fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -58,7 +59,7 @@ public class ThemesFragment extends Fragment {
         themeAdapter = new ThemeAdapter(themesList, getActivity());
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(),layoutManager.getOrientation());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
         themesRecyclerView = (RecyclerView) v.findViewById(R.id.themeRecyclerView);
 
         themesRecyclerView.setAdapter(themeAdapter);
@@ -108,10 +109,10 @@ public class ThemesFragment extends Fragment {
                 Intent intent = new Intent(getContext(), ThemeActivity.class);
                 getActivity().overridePendingTransition(R.anim.start, R.anim.end);
                 Theme t = themesList.get(position);
-                Log.d("wow",Integer.toString(position));
+                Log.d("wow", Integer.toString(position));
                 intent.putExtra("theme", t);
-                intent.putExtra("position",position);
-                startActivityForResult(intent,1);
+                intent.putExtra("position", position);
+                startActivityForResult(intent, 1);
             }
 
             @Override
@@ -126,34 +127,34 @@ public class ThemesFragment extends Fragment {
 
     private void generateData() {
 
-       /* List<Card> cards1 = new ArrayList<>();
-        cards1.add(new Card(R.drawable.firewatch, "Card 1", "Something about relationships"));
-        cards1.add(new Card(R.drawable.health, "Card 2", "Something about life"));
-        cards1.add(new Card(R.drawable.vrijetijd, "Card 3", "Something about love"));
-        cards1.add(new Card( "Card 4", "Something about nothing"));
+        List<Card> cards1 = new ArrayList<>();
+        cards1.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/relations").toString()
+                , "Card 1", "Something about relationships"));
+        cards1.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/health").toString(), "Card 2", "Something about life"));
+        cards1.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/firewatch").toString(), "Card 3", "Something about home"));
+        cards1.add(new Card("Card 4", "Something about nothing"));
 
         List<Card> cards2 = new ArrayList<>();
-        cards2.add(new Card(R.drawable.vrijetijd, "Card 1", "Something about life"));
-        cards2.add(new Card(R.drawable.firewatch, "Card 2", "Something about living"));
-        cards2.add(new Card(R.drawable.health, "Card 3", "Something about life"));
+        cards2.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/firewatch").toString(), "Card 1", "Something about life"));
+        cards2.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/relations").toString(), "Card 2", "Something about living"));
+        cards2.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/health").toString(), "Card 3", "Something about life"));
 
         List<Card> cards3 = new ArrayList<>();
-        cards3.add(new Card(R.drawable.health, "Card 3", "Something about life"));
-        cards3.add(new Card(R.drawable.vrijetijd, "Card 1", "Something about life"));
-        cards3.add(new Card(R.drawable.firewatch, "Card 2", "Something about living"));*/
-
+        cards3.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/health").toString(), "Card 3", "Something about life"));
+        cards3.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/firewatch").toString(), "Card 1", "Something about life"));
+        cards3.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image").toString(), "Card 2", "Something about living"));
 
 
         Theme theme1 = new Theme("Relaties");
         themesList.add(theme1);
 
-        Theme theme2 = new Theme("Wonen"/*, cards1*/);
+        Theme theme2 = new Theme("Wonen", cards1);
         themesList.add(theme2);
 
-        Theme theme3 = new Theme("Vrijetijd & Dagbesteding" /*, cards2*/);
+        Theme theme3 = new Theme("Vrijetijd & Dagbesteding" , cards2);
         themesList.add(theme3);
 
-        Theme theme4 = new Theme("Gezondheid & Welzijn" /*,cards3*/);
+        Theme theme4 = new Theme("Gezondheid & Welzijn" ,cards3);
         themesList.add(theme4);
 
         //load other themes v
@@ -168,13 +169,13 @@ public class ThemesFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
-                Theme theme =data.getParcelableExtra("result");
-                int position = data.getIntExtra("position",20) ;
-                Log.d("test",Integer.toString(position));
-                themesList.set(position,theme);
+            if (resultCode == Activity.RESULT_OK) {
+                Theme theme = data.getParcelableExtra("result");
+                int position = data.getIntExtra("position", 20);
+                Log.d("test", Integer.toString(position));
+                themesList.set(position, theme);
                 themesRecyclerView.getRecycledViewPool().clear();
                 themeAdapter.notifyItemChanged(position);
             }
