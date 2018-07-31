@@ -36,9 +36,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.pieter.memoire.Activities.MainActivity;
 import com.example.pieter.memoire.Activities.TestActivity;
@@ -219,15 +221,41 @@ public class MediaFragment extends Fragment {
                 ClickListener() {
                     @Override
                     public void onClick(View v, int position) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        final View dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details, null);
-                        final TextView titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details);
-                        final TextView descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details);
-                        ImageView imageDetails = (ImageView) dialogViewDetails.findViewById(R.id.image_details);
 
-                        titleDetails.setText(theme.getCards().get(position).getTitle());
-                        descriptionDetails.setText(theme.getCards().get(position).getDescription());
-                        imageDetails.setImageURI(Uri.parse(theme.getCards().get(position).getUri()));
+                        Card card = theme.getCards().get(position);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                         View dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details, null);
+                         TextView titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details);
+                         TextView descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details);
+                        ImageView imageDetails = (ImageView) dialogViewDetails.findViewById(R.id.image_details);
+                        final VideoView videoDetails;
+
+                        titleDetails.setText(card.getTitle());
+                        descriptionDetails.setText(card.getDescription());
+                        imageDetails.setImageURI(Uri.parse(card.getUri()));
+
+                        if(card.getHasVideo())
+                        {
+                            Toast.makeText(getActivity(),"wtf",Toast.LENGTH_SHORT).show();
+                            dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details_video,null);
+                             titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details_video);
+                             descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details_video);
+                             videoDetails = (VideoView) dialogViewDetails.findViewById(R.id.video_details);
+                            titleDetails.setText(card.getTitle());
+                            descriptionDetails.setText(card.getDescription());
+
+                            videoDetails.setMediaController(new MediaController(getContext()));
+                            videoDetails.setVideoPath(card.getUri());
+                            videoDetails.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    videoDetails.start();
+                                }
+                            });
+
+
+
+                        }
 
                         builder.setView(dialogViewDetails);
                         builder.show();
@@ -324,13 +352,14 @@ public class MediaFragment extends Fragment {
 
     private void verifyPermissions() {
         String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.INTERNET};
 
         if (ContextCompat.checkSelfPermission(
                 getActivity().getApplicationContext(), permissions[0]) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), permissions[1]) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), permissions[2]) ==
-                        PackageManager.PERMISSION_GRANTED) {
+                        PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), permissions[3]) ==
+                PackageManager.PERMISSION_GRANTED) {
             Log.d("granted", "permissions granted already!");
         } else {
             ActivityCompat.requestPermissions(getActivity(), permissions, 22);
