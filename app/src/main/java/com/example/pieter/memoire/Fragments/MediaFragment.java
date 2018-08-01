@@ -13,6 +13,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -53,10 +54,23 @@ import com.example.pieter.memoire.R;
 import com.example.pieter.memoire.Utilities.GridAutofitLayoutManager;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -170,8 +184,64 @@ public class MediaFragment extends Fragment {
                                 Intent intent = new Intent();
                                 intent.setType("video/*");
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent,"Select Video"),2);
+                                startActivityForResult(Intent.createChooser(intent, "Select Video"), 2);
                                 Toast.makeText(getActivity(), "lmao", Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case 3:
+                                HttpURLConnection connection = null;
+                                BufferedReader reader = null;
+
+                                String key = "a3c7977a32472ad4d62c1f2af1daf309";
+                                String sharedSecret = "6e56da13252e5d2c";
+                                String tag = "dog";
+                                String urlToRead = "https://api.flickr.com/services/rest/" +
+                                        "?method=flickr.photos.search&" +
+                                        "api_key=2bbf5f6e8d80ee4c27de1bd2e16a2d4f" +
+                                        "&tags=dog" +
+                                        "&format=json" +
+                                        "&nojsoncallback=1";
+                                String url2 = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2bbf5f6e8d80ee4c27de1bd2e16a2d4f&tags=cat&format=json&nojsoncallback=1";
+
+                                String baseUrl = String.format(urlToRead, tag);
+
+                                if (android.os.Build.VERSION.SDK_INT > 9) {
+                                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                                    StrictMode.setThreadPolicy(policy);
+                                }
+                                try {
+                                    URL url = new URL(url2);
+                                    connection = (HttpURLConnection) url.openConnection();
+                                    connection.connect();
+
+                                    InputStream stream = connection.getInputStream();
+                                    reader = new BufferedReader(new InputStreamReader(stream));
+                                    StringBuffer buffer = new StringBuffer();
+
+                                    String line = "";
+                                    while((line = reader.readLine()) != null){
+                                        buffer.append(line);
+                                    }
+                                    Toast.makeText(getActivity(), buffer.toString() + "d", Toast.LENGTH_SHORT).show();
+
+
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                finally {
+                                    if(connection != null) {
+                                        connection.disconnect();
+                                    }
+                                    try {
+                                        if(reader != null) {
+                                            reader.close();
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
 
                         }
 
@@ -191,15 +261,13 @@ public class MediaFragment extends Fragment {
                         if (inputTitle.getText().toString().isEmpty() || inputDescription.getText().toString().isEmpty()) {
                             Toast.makeText(getActivity(), "Name and Description field can't be empty!", Toast.LENGTH_SHORT).show();
                         } else {
-                            if(videoPath != null && !videoPath.isEmpty())
-                            {
-                                card = new Card(videoPath, inputTitle.getText().toString(), inputDescription.getText().toString(),true);
+                            if (videoPath != null && !videoPath.isEmpty()) {
+                                card = new Card(videoPath, inputTitle.getText().toString(), inputDescription.getText().toString(), true);
                                 theme.addCardToList(card);
                                 mediaRecyclerView.getRecycledViewPool().clear();
                                 adapter.notifyItemInserted(theme.getCards().size() - 1);
                                 dialog.dismiss();
-                            }
-                            else {
+                            } else {
                                 card = new Card(uri.toString(), inputTitle.getText().toString(), inputDescription.getText().toString());
                                 theme.addCardToList(card);
                                 mediaRecyclerView.getRecycledViewPool().clear();
@@ -224,9 +292,9 @@ public class MediaFragment extends Fragment {
 
                         Card card = theme.getCards().get(position);
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                         View dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details, null);
-                         TextView titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details);
-                         TextView descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details);
+                        View dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details, null);
+                        TextView titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details);
+                        TextView descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details);
                         ImageView imageDetails = (ImageView) dialogViewDetails.findViewById(R.id.image_details);
                         final VideoView videoDetails;
 
@@ -234,13 +302,12 @@ public class MediaFragment extends Fragment {
                         descriptionDetails.setText(card.getDescription());
                         imageDetails.setImageURI(Uri.parse(card.getUri()));
 
-                        if(card.getHasVideo())
-                        {
-                            Toast.makeText(getActivity(),"wtf",Toast.LENGTH_SHORT).show();
-                            dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details_video,null);
-                             titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details_video);
-                             descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details_video);
-                             videoDetails = (VideoView) dialogViewDetails.findViewById(R.id.video_details);
+                        if (card.getHasVideo()) {
+                            Toast.makeText(getActivity(), "wtf", Toast.LENGTH_SHORT).show();
+                            dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details_video, null);
+                            titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details_video);
+                            descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details_video);
+                            videoDetails = (VideoView) dialogViewDetails.findViewById(R.id.video_details);
                             titleDetails.setText(card.getTitle());
                             descriptionDetails.setText(card.getDescription());
 
@@ -252,7 +319,6 @@ public class MediaFragment extends Fragment {
                                     videoDetails.start();
                                 }
                             });
-
 
 
                         }
@@ -293,9 +359,8 @@ public class MediaFragment extends Fragment {
                 }
                 break;
             case 2:
-                if(resultCode == RESULT_OK)
-                {
-                     Toast.makeText(getActivity(),getRealPathFromURIForVideo(data.getData()), Toast.LENGTH_LONG).show();
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(getActivity(), getRealPathFromURIForVideo(data.getData()), Toast.LENGTH_LONG).show();
                     videoPath = getRealPathFromURIForVideo(data.getData());
                     Bitmap bitmap2 = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Video.Thumbnails.MICRO_KIND);
                     dialogImage.setImageBitmap(bitmap2);
@@ -310,9 +375,9 @@ public class MediaFragment extends Fragment {
         String wholeID = DocumentsContract.getDocumentId(selectedVideoUri);
         String id = wholeID.split(":")[1];
 
-        String[] column = { MediaStore.Video.Media.DATA };
+        String[] column = {MediaStore.Video.Media.DATA};
         String sel = MediaStore.Video.Media._ID + "=?";
-        Cursor cursor = getContext().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{ id }, null);
+        Cursor cursor = getContext().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, column, sel, new String[]{id}, null);
         String filePath = "";
 
         int columnIndex = cursor.getColumnIndex(column[0]);
