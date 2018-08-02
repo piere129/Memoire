@@ -43,9 +43,6 @@
             android:name=".Activities.ThemeActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
-        <activity android:name=".Activities.TestActivity">
-
-        </activity>
-    </application>
+        </application>
 
 </manifest>

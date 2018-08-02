@@ -2,14 +2,11 @@ package com.example.pieter.memoire.Fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -36,7 +33,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.Spinner;
@@ -44,8 +40,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.example.pieter.memoire.Activities.MainActivity;
-import com.example.pieter.memoire.Activities.TestActivity;
 import com.example.pieter.memoire.Adapters.MediaAdapter;
 import com.example.pieter.memoire.ClickListeners.ClickListener;
 import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
@@ -59,25 +53,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

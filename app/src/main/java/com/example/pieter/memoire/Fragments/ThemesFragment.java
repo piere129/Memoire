@@ -22,12 +22,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.pieter.memoire.Activities.MainActivity;
 import com.example.pieter.memoire.Activities.ThemeActivity;
 import com.example.pieter.memoire.Adapters.ThemeAdapter;
 import com.example.pieter.memoire.ClickListeners.ClickListener;
 import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
 import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
+import com.example.pieter.memoire.Persistence.ThemeDataSource;
+import com.example.pieter.memoire.Persistence.ThemeDatabase;
+import com.example.pieter.memoire.Persistence.ThemeRepository;
 import com.example.pieter.memoire.R;
 
 import java.util.ArrayList;
@@ -35,12 +39,24 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class ThemesFragment extends Fragment {
 
     private List<Theme> themesList = new ArrayList<>();
     RecyclerView themesRecyclerView;
     ThemeAdapter themeAdapter;
+    private ThemeRepository themeRepository;
+    private CompositeDisposable compositeDisposable;
+
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -51,8 +67,14 @@ public class ThemesFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.theme_activity, container, false);
         ButterKnife.bind(this, v);
+
+        ThemeDatabase database = ThemeDatabase.getInstance(getActivity());
+        themeRepository = ThemeRepository.getInstance(ThemeDataSource.getInstance(database.themeDao()));
+        compositeDisposable = new CompositeDisposable();
         if (savedInstanceState == null || !savedInstanceState.containsKey("themes")) {
-            generateData();
+            //generateData();
+            loadData();
+
         } else {
             themesList = savedInstanceState.getParcelableArrayList("themes");
         }
@@ -88,10 +110,10 @@ public class ThemesFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         if (!inputName.getText().toString().isEmpty()) {
-                            Theme t = new Theme(inputName.getText().toString());
-                            themesList.add(t);
-                            themeAdapter.notifyItemInserted(themesList.size() - 1);
+
+                            addTheme(inputName.getText().toString());
                             dialog.dismiss();
+
 
                         } else {
                             Toast.makeText(getContext(), "Please fill in the name field!", Toast.LENGTH_LONG).show();
@@ -116,10 +138,8 @@ public class ThemesFragment extends Fragment {
             }
 
             @Override
-            public void onLongClick(View v, int position) {
-                themesList.remove(position);
-                themesRecyclerView.getRecycledViewPool().clear();
-                themeAdapter.notifyItemRemoved(position);
+            public void onLongClick(View v, final int position) {
+                deleteTheme(position);
             }
         }));
         return v;
@@ -181,4 +201,138 @@ public class ThemesFragment extends Fragment {
             }
         }
     }
+
+    private void addTheme(String s) {
+        final String temp = s;
+        Disposable disposable = io.reactivex.Observable.create(new ObservableOnSubscribe<Object>() {
+
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                Theme t = new Theme(temp);
+
+                themeRepository.addTheme(t);
+                e.onComplete();
+
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
+                .subscribe(new Consumer() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Toast.makeText(getActivity(), "User added", Toast.LENGTH_LONG).show();
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), "" + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        //for refreshing data
+                        loadData();
+                    }
+                });
+        compositeDisposable.add(disposable);
+
+    }
+
+    private void deleteTheme(int position) {
+        final int temp = position;
+        Disposable disposable = io.reactivex.Observable.create(new ObservableOnSubscribe<Object>() {
+
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                themeRepository.deleteTheme(themesList.get(temp));
+                e.onComplete();
+
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
+                .subscribe(new Consumer() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Toast.makeText(getActivity(), "Theme removed", Toast.LENGTH_LONG).show();
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), "" + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        //for refreshing data
+                        loadData();
+                    }
+                });
+        compositeDisposable.add(disposable);
+
+    }
+
+    private void updateTheme(Theme t) {
+
+        final Theme temp = t;
+        Disposable disposable = io.reactivex.Observable.create(new ObservableOnSubscribe<Object>() {
+
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                themeRepository.modifyTheme(temp);
+                e.onComplete();
+
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
+                .subscribe(new Consumer() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Toast.makeText(getActivity(), "Theme modified", Toast.LENGTH_LONG).show();
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), "" + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        //for refreshing data
+                        loadData();
+                    }
+                });
+        compositeDisposable.add(disposable);
+    }
+
+
+    private void loadData() {
+        Disposable disposable = themeRepository.getThemes()
+                .observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<List<Theme>>() {
+                    @Override
+                    public void accept(List<Theme> themes) throws Exception {
+                        onGetAllThemeSuccess(themes);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), ""+throwable.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                });
+        compositeDisposable.add(disposable);
+    }
+
+    private void onGetAllThemeSuccess(List<Theme> themes) {
+        themesList.clear();
+        themesList.addAll(themes);
+        themesRecyclerView.getRecycledViewPool().clear();
+        themeAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.clear();
+
+    }
+
 }

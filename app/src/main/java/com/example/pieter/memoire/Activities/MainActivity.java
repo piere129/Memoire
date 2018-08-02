@@ -1,7 +1,9 @@
 package com.example.pieter.memoire.Activities;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,12 +19,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.pieter.memoire.Fragments.ThemesFragment;
+import com.example.pieter.memoire.Models.Theme;
+import com.example.pieter.memoire.Persistence.ThemeDataSource;
+import com.example.pieter.memoire.Persistence.ThemeDatabase;
+import com.example.pieter.memoire.Persistence.ThemeRepository;
 import com.example.pieter.memoire.R;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.nav_view)
     NavigationView navigationView;
     Fragment themesFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +62,8 @@ public class MainActivity extends AppCompatActivity
             transaction.commit();
         }
 
+
+
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -59,7 +76,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
     }
-
 
     @Override
     public void onBackPressed() {
