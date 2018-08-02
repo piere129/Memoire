@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -51,11 +52,16 @@ import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
 import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
+import com.example.pieter.memoire.Utilities.FlickrData;
 import com.example.pieter.memoire.Utilities.GridAutofitLayoutManager;
+import com.example.pieter.memoire.Utilities.Photo;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -66,6 +72,7 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -143,6 +150,7 @@ public class MediaFragment extends Fragment {
                 final View dialogview = getLayoutInflater().inflate(R.layout.dialog_create_media, null);
                 final EditText inputTitle = (EditText) dialogview.findViewById(R.id.input_title);
                 final EditText inputDescription = (EditText) dialogview.findViewById(R.id.input_description);
+                final EditText inputFlickr = (EditText) dialogview.findViewById(R.id.flickr_input);
                 dialogImage = (ImageView) dialogview.findViewById(R.id.input_media);
                 dialogImage.setImageURI(uri);
                 final Spinner spinner = (Spinner) dialogview.findViewById(R.id.spinner);
@@ -153,7 +161,11 @@ public class MediaFragment extends Fragment {
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        Toast.makeText(getContext(), "position:" + spinner.getSelectedItemPosition(), Toast.LENGTH_SHORT).show();
+                        if (i == 3) {
+                            inputFlickr.setVisibility(View.VISIBLE);
+                        } else {
+                            inputFlickr.setVisibility(View.INVISIBLE);
+                        }
                     }
 
                     @Override
@@ -189,60 +201,24 @@ public class MediaFragment extends Fragment {
                                 break;
 
                             case 3:
-                                HttpURLConnection connection = null;
-                                BufferedReader reader = null;
+                                Gson gson = new GsonBuilder().create();
+                                FlickrData flickrData = gson.fromJson(getJSONFlickr(inputFlickr.getText().toString()), FlickrData.class);
 
-                                String key = "a3c7977a32472ad4d62c1f2af1daf309";
-                                String sharedSecret = "6e56da13252e5d2c";
-                                String tag = "dog";
-                                String urlToRead = "https://api.flickr.com/services/rest/" +
-                                        "?method=flickr.photos.search&" +
-                                        "api_key=2bbf5f6e8d80ee4c27de1bd2e16a2d4f" +
-                                        "&tags=dog" +
-                                        "&format=json" +
-                                        "&nojsoncallback=1";
-                                String url2 = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2bbf5f6e8d80ee4c27de1bd2e16a2d4f&tags=cat&format=json&nojsoncallback=1";
+                                if (flickrData.stat.equals("ok")) {
+                                    for (Photo data : flickrData.photos.photo) {
+                                        // retrieve one photo
+                                        // http://farm{farmid}.staticflickr.com/{server-id}/{id}_{secret}{size}.jpg
 
-                                String baseUrl = String.format(urlToRead, tag);
+                                        String photoUrl = "http://farm%d.staticflickr.com/%s/%s_%s_n.jpg";
+                                        String baseurl = String.format(photoUrl, data.farm, data.server, data.id, data.secret);
+                                        uri = Uri.parse(baseurl);
+                                        //Bitmap bitmap = getImageBitmapFromUrl(baseurl);
+                                        //  dialogImage.setImageBitmap(bitmap);
+                                        Picasso.get().load(uri).fit().centerCrop().into(dialogImage);
+                                        break;
 
-                                if (android.os.Build.VERSION.SDK_INT > 9) {
-                                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                                    StrictMode.setThreadPolicy(policy);
-                                }
-                                try {
-                                    URL url = new URL(url2);
-                                    connection = (HttpURLConnection) url.openConnection();
-                                    connection.connect();
-
-                                    InputStream stream = connection.getInputStream();
-                                    reader = new BufferedReader(new InputStreamReader(stream));
-                                    StringBuffer buffer = new StringBuffer();
-
-                                    String line = "";
-                                    while((line = reader.readLine()) != null){
-                                        buffer.append(line);
-                                    }
-                                    Toast.makeText(getActivity(), buffer.toString() + "d", Toast.LENGTH_SHORT).show();
-
-
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                finally {
-                                    if(connection != null) {
-                                        connection.disconnect();
-                                    }
-                                    try {
-                                        if(reader != null) {
-                                            reader.close();
-                                        }
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
                                     }
                                 }
-
                         }
 
 
@@ -300,10 +276,9 @@ public class MediaFragment extends Fragment {
 
                         titleDetails.setText(card.getTitle());
                         descriptionDetails.setText(card.getDescription());
-                        imageDetails.setImageURI(Uri.parse(card.getUri()));
+                        Picasso.get().load(Uri.parse(card.getUri())).into(imageDetails);
 
                         if (card.getHasVideo()) {
-                            Toast.makeText(getActivity(), "wtf", Toast.LENGTH_SHORT).show();
                             dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details_video, null);
                             titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details_video);
                             descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details_video);
@@ -337,6 +312,7 @@ public class MediaFragment extends Fragment {
 
         return v;
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -386,6 +362,63 @@ public class MediaFragment extends Fragment {
         }
         cursor.close();
         return filePath;
+    }
+
+    private String getJSONFlickr(String inputTag) {
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+        StringBuffer buffer = null;
+
+        String tag;
+        if (inputTag.isEmpty() || inputTag.equals(null)) {
+            tag = "waffles";
+        } else {
+            tag = inputTag;
+        }
+        String urlToRead = "https://api.flickr.com/services/rest/" +
+                "?method=flickr.photos.search&" +
+                "api_key=a3c7977a32472ad4d62c1f2af1daf309" +
+                "&tags=%s" +
+                "&format=json" +
+                "&nojsoncallback=1";
+
+        String baseUrl = String.format(urlToRead, tag);
+
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+        try {
+            URL url = new URL(baseUrl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+
+            InputStream stream = connection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(stream));
+            buffer = new StringBuffer();
+
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line);
+            }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return buffer.toString();
     }
 
     private void saveImage(Intent data) {
