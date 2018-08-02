@@ -21,6 +21,9 @@ public class Card implements Parcelable {
     @NonNull
     private int id;
 
+    @ColumnInfo(name="theme_id")
+    private int themeId;
+
     @ColumnInfo(name = "card_date")
     private String date;
 
@@ -62,6 +65,14 @@ public class Card implements Parcelable {
         this.description = description;
         this.uri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card").toString();
         this.date = DateFormat.getDateTimeInstance().format(new Date());
+    }
+
+    public int getThemeId() {
+        return themeId;
+    }
+
+    public void setThemeId(int themeId) {
+        this.themeId = themeId;
     }
 
     public boolean getHasVideo() {
