@@ -211,6 +211,7 @@ public class MediaFragment extends Fragment {
                                         //Bitmap bitmap = getImageBitmapFromUrl(baseurl);
                                         //  dialogImage.setImageBitmap(bitmap);
                                         Picasso.get().load(uri).fit().centerCrop().into(dialogImage);
+                                        videoPath = null;
                                         break;
 
                                     }
@@ -237,7 +238,7 @@ public class MediaFragment extends Fragment {
                                  final Card card = new Card(theme.getId(), videoPath, inputTitle.getText().toString()
                                         , inputDescription.getText().toString(), true);
 
-                                        //themeDatabase.getCardDao().addCard(card);
+                                        themeDatabase.getCardDao().addCard(card);
                                         //add card to theme?
 
                                 theme.addCardToList(card);
@@ -245,10 +246,10 @@ public class MediaFragment extends Fragment {
                                 adapter.notifyItemInserted(theme.getCards().size() - 1);
                                 dialog.dismiss();
                             } else {
-                                final Card card = new Card(theme.getId(), uri.toString(), inputTitle.getText().toString()
+                                 Card card = new Card(theme.getId(), uri.toString(), inputTitle.getText().toString()
                                         , inputDescription.getText().toString(), false);
 
-                                        //themeDatabase.getCardDao().addCard(card);
+                                        themeDatabase.getCardDao().addCard(card);
                                         //add card to theme?
 
                                 theme.addCardToList(card);
@@ -310,6 +311,8 @@ public class MediaFragment extends Fragment {
 
                     @Override
                     public void onLongClick(View v, int position) {
+
+                        themeDatabase.getCardDao().deleteCard(theme.getCards().get(position));
                         theme.deleteCardFromList(position);
                         mediaRecyclerView.getRecycledViewPool().clear();
                         adapter.notifyItemRemoved(position);

@@ -29,7 +29,6 @@ import com.example.pieter.memoire.ClickListeners.ClickListener;
 import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
 import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
-import com.example.pieter.memoire.Models.ThemeWithCards;
 import com.example.pieter.memoire.Persistence.ThemeDatabase;
 import com.example.pieter.memoire.R;
 
@@ -74,7 +73,10 @@ public class ThemesFragment extends Fragment {
             for(Theme t : themes)
             {
                 Theme temp = t;
-                temp.setCards(themeDatabase.getCardDao().getCardsFromTheme(temp.getId()));
+                //.getCardsFromTheme(temp.getId())
+                //temp.setCards();
+                List<Card> cards = themeDatabase.getCardDao().getCardsFromTheme(t.getId());
+                temp.setCards(cards);
                 themesList.add(temp);
             }
 

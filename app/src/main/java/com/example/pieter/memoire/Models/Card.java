@@ -17,12 +17,16 @@ import java.util.Date;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
-@Entity
+@Entity(foreignKeys = @ForeignKey(entity = Theme.class,
+        parentColumns = "id",
+        childColumns = "theme_id",
+        onDelete = CASCADE))
 public class Card implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
     private int id;
+
 
     @ColumnInfo(name="theme_id")
     private int themeId;
@@ -100,7 +104,7 @@ public class Card implements Parcelable {
         return this.uri;
     }
 
-    public void setUri(String image) {
+    public void setUri(String uri) {
         this.uri = uri;
     }
 
