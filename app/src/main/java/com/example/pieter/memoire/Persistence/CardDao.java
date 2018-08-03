@@ -25,6 +25,6 @@ public interface CardDao {
     @Delete
     public void deleteCard(Card card);
 
-    @Query("select * from cards WHERE theme_id=:themeId")
-    Flowable<List<Card>> getCardsForTheme(int themeId);
+    @Query("Select * from Card where theme_id=:themeId")
+    public List<Card> getCardsFromTheme(int themeId);
 }

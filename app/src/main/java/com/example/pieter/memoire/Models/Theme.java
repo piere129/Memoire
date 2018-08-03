@@ -13,7 +13,7 @@ import com.example.pieter.memoire.R;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(tableName = "themes")
+@Entity
 public class Theme implements Parcelable {
 
     @NonNull

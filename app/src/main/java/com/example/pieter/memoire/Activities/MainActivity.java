@@ -23,9 +23,7 @@ import android.widget.Toast;
 
 import com.example.pieter.memoire.Fragments.ThemesFragment;
 import com.example.pieter.memoire.Models.Theme;
-import com.example.pieter.memoire.Persistence.ThemeDataSource;
 import com.example.pieter.memoire.Persistence.ThemeDatabase;
-import com.example.pieter.memoire.Persistence.ThemeRepository;
 import com.example.pieter.memoire.R;
 
 import java.util.List;

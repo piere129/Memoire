@@ -39,12 +39,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-
 import com.example.pieter.memoire.Adapters.MediaAdapter;
 import com.example.pieter.memoire.ClickListeners.ClickListener;
 import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
 import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
+import com.example.pieter.memoire.Persistence.ThemeDatabase;
 import com.example.pieter.memoire.R;
 import com.example.pieter.memoire.Utilities.FlickrData;
 import com.example.pieter.memoire.Utilities.GridAutofitLayoutManager;
@@ -52,7 +52,6 @@ import com.example.pieter.memoire.Utilities.Photo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -61,9 +60,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -78,6 +86,9 @@ public class MediaFragment extends Fragment {
     ImageView dialogImage;
     Uri uri;
     String videoPath;
+    ThemeDatabase themeDatabase;
+    CompositeDisposable compositeDisposable;
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -87,6 +98,8 @@ public class MediaFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.media_activity, container, false);
         ButterKnife.bind(this, v);
+
+        themeDatabase = ThemeDatabase.getInstance(getActivity());
 
         getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
 
@@ -216,18 +229,28 @@ public class MediaFragment extends Fragment {
                 {
                     @Override
                     public void onClick(View view) {
-                        Card card;
+
                         if (inputTitle.getText().toString().isEmpty() || inputDescription.getText().toString().isEmpty()) {
                             Toast.makeText(getActivity(), "Name and Description field can't be empty!", Toast.LENGTH_SHORT).show();
                         } else {
                             if (videoPath != null && !videoPath.isEmpty()) {
-                                card = new Card(videoPath, inputTitle.getText().toString(), inputDescription.getText().toString(), true);
+                                 final Card card = new Card(theme.getId(), videoPath, inputTitle.getText().toString()
+                                        , inputDescription.getText().toString(), true);
+
+                                        //themeDatabase.getCardDao().addCard(card);
+                                        //add card to theme?
+
                                 theme.addCardToList(card);
                                 mediaRecyclerView.getRecycledViewPool().clear();
                                 adapter.notifyItemInserted(theme.getCards().size() - 1);
                                 dialog.dismiss();
                             } else {
-                                card = new Card(uri.toString(), inputTitle.getText().toString(), inputDescription.getText().toString());
+                                final Card card = new Card(theme.getId(), uri.toString(), inputTitle.getText().toString()
+                                        , inputDescription.getText().toString(), false);
+
+                                        //themeDatabase.getCardDao().addCard(card);
+                                        //add card to theme?
+
                                 theme.addCardToList(card);
                                 mediaRecyclerView.getRecycledViewPool().clear();
                                 adapter.notifyItemInserted(theme.getCards().size() - 1);

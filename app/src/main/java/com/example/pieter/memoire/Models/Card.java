@@ -2,6 +2,7 @@ package com.example.pieter.memoire.Models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.net.Uri;
@@ -14,7 +15,9 @@ import com.example.pieter.memoire.R;
 import java.text.DateFormat;
 import java.util.Date;
 
-@Entity(tableName = "cards")
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+@Entity
 public class Card implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
@@ -40,6 +43,16 @@ public class Card implements Parcelable {
     private boolean hasVideo;
 
     public Card(){}
+
+    @Ignore
+    public Card(int themeId, String uri, String title, String description, boolean hasVideo) {
+        this.uri = uri;
+        this.title = title;
+        this.description = description;
+        this.hasVideo = hasVideo;
+        this.date = DateFormat.getDateTimeInstance().format(new Date());
+        this.themeId = themeId;
+    }
 
     @Ignore
     public Card(String uri, String title, String description, boolean hasVideo) {
@@ -125,6 +138,7 @@ public class Card implements Parcelable {
 
     protected Card(Parcel in) {
         id = in.readInt();
+        themeId = in.readInt();
         date = in.readString();
         uri = in.readString();
         title = in.readString();
@@ -140,6 +154,7 @@ public class Card implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
+        dest.writeInt(themeId);
         dest.writeString(date);
         dest.writeString(uri);
         dest.writeString(title);

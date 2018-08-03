@@ -24,7 +24,7 @@ public interface ThemeDao {
     @Delete
     public void deleteTheme(Theme theme);
 
-    @Query("select * from themes")
-    Flowable<List<Theme>> getThemes();
+    @Query("select * from Theme")
+    List<Theme> getThemes();
 
 }

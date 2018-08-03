@@ -29,9 +29,8 @@ import com.example.pieter.memoire.ClickListeners.ClickListener;
 import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
 import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
-import com.example.pieter.memoire.Persistence.ThemeDataSource;
+import com.example.pieter.memoire.Models.ThemeWithCards;
 import com.example.pieter.memoire.Persistence.ThemeDatabase;
-import com.example.pieter.memoire.Persistence.ThemeRepository;
 import com.example.pieter.memoire.R;
 
 import java.util.ArrayList;
@@ -54,9 +53,8 @@ public class ThemesFragment extends Fragment {
     private List<Theme> themesList = new ArrayList<>();
     RecyclerView themesRecyclerView;
     ThemeAdapter themeAdapter;
-    private ThemeRepository themeRepository;
-    private CompositeDisposable compositeDisposable;
-
+    CompositeDisposable compositeDisposable;
+    ThemeDatabase themeDatabase;
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
@@ -68,12 +66,18 @@ public class ThemesFragment extends Fragment {
         View v = inflater.inflate(R.layout.theme_activity, container, false);
         ButterKnife.bind(this, v);
 
-        ThemeDatabase database = ThemeDatabase.getInstance(getActivity());
-        themeRepository = ThemeRepository.getInstance(ThemeDataSource.getInstance(database.themeDao()));
+        themeDatabase = ThemeDatabase.getInstance(getActivity());
         compositeDisposable = new CompositeDisposable();
         if (savedInstanceState == null || !savedInstanceState.containsKey("themes")) {
             //generateData();
-            loadData();
+            List<Theme> themes = themeDatabase.getThemeDao().getThemes();
+            for(Theme t : themes)
+            {
+                Theme temp = t;
+                temp.setCards(themeDatabase.getCardDao().getCardsFromTheme(temp.getId()));
+                themesList.add(temp);
+            }
+
 
         } else {
             themesList = savedInstanceState.getParcelableArrayList("themes");
@@ -171,10 +175,10 @@ public class ThemesFragment extends Fragment {
         Theme theme2 = new Theme("Wonen", cards1);
         themesList.add(theme2);
 
-        Theme theme3 = new Theme("Vrijetijd & Dagbesteding" , cards2);
+        Theme theme3 = new Theme("Vrijetijd & Dagbesteding", cards2);
         themesList.add(theme3);
 
-        Theme theme4 = new Theme("Gezondheid & Welzijn" ,cards3);
+        Theme theme4 = new Theme("Gezondheid & Welzijn", cards3);
         themesList.add(theme4);
 
         //load other themes v
@@ -204,125 +208,42 @@ public class ThemesFragment extends Fragment {
 
     private void addTheme(String s) {
         final String temp = s;
-        Disposable disposable = io.reactivex.Observable.create(new ObservableOnSubscribe<Object>() {
 
-            @Override
-            public void subscribe(ObservableEmitter<Object> e) throws Exception {
-                Theme t = new Theme(temp);
+        Theme t = new Theme(temp);
 
-                themeRepository.addTheme(t);
-                e.onComplete();
-
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
-                .subscribe(new Consumer() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        Toast.makeText(getActivity(), "User added", Toast.LENGTH_LONG).show();
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Toast.makeText(getActivity(), "" + throwable.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }, new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        //for refreshing data
-                        loadData();
-                    }
-                });
-        compositeDisposable.add(disposable);
-
-    }
+        themeDatabase.getThemeDao().addTheme(t);
+        loadData();
+        }
 
     private void deleteTheme(int position) {
         final int temp = position;
-        Disposable disposable = io.reactivex.Observable.create(new ObservableOnSubscribe<Object>() {
 
-            @Override
-            public void subscribe(ObservableEmitter<Object> e) throws Exception {
-                themeRepository.deleteTheme(themesList.get(temp));
-                e.onComplete();
-
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
-                .subscribe(new Consumer() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        Toast.makeText(getActivity(), "Theme removed", Toast.LENGTH_LONG).show();
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Toast.makeText(getActivity(), "" + throwable.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }, new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        //for refreshing data
-                        loadData();
-                    }
-                });
-        compositeDisposable.add(disposable);
+        themeDatabase.getThemeDao().deleteTheme(themesList.get(temp));
+        loadData();
 
     }
 
     private void updateTheme(Theme t) {
 
         final Theme temp = t;
-        Disposable disposable = io.reactivex.Observable.create(new ObservableOnSubscribe<Object>() {
 
-            @Override
-            public void subscribe(ObservableEmitter<Object> e) throws Exception {
-                themeRepository.modifyTheme(temp);
-                e.onComplete();
-
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
-                .subscribe(new Consumer() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        Toast.makeText(getActivity(), "Theme modified", Toast.LENGTH_LONG).show();
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Toast.makeText(getActivity(), "" + throwable.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }, new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        //for refreshing data
-                        loadData();
-                    }
-                });
-        compositeDisposable.add(disposable);
+        themeDatabase.getThemeDao().modifyTheme(temp);
+        loadData();
     }
 
 
     private void loadData() {
-        Disposable disposable = themeRepository.getThemes()
-                .observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<List<Theme>>() {
-                    @Override
-                    public void accept(List<Theme> themes) throws Exception {
-                        onGetAllThemeSuccess(themes);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Toast.makeText(getActivity(), ""+throwable.getMessage(),Toast.LENGTH_LONG).show();
-                    }
-                });
-        compositeDisposable.add(disposable);
+        List<Theme> themes =themeDatabase.getThemeDao().getThemes();
+        onGetAllThemeSuccess(themes);
+
     }
 
     private void onGetAllThemeSuccess(List<Theme> themes) {
         themesList.clear();
+        for (Theme t : themes) {
+            t.setCards(themeDatabase.getCardDao().getCardsFromTheme(t.getId()));
+        }
+
         themesList.addAll(themes);
         themesRecyclerView.getRecycledViewPool().clear();
         themeAdapter.notifyDataSetChanged();
