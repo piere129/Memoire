@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.pieter.memoire.Activities.MainActivity;
 import com.example.pieter.memoire.Activities.ThemeActivity;
 import com.example.pieter.memoire.Adapters.ThemeAdapter;
+import com.example.pieter.memoire.ClickListeners.ButtonClickListener;
 import com.example.pieter.memoire.ClickListeners.ClickListener;
 import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
 import com.example.pieter.memoire.Models.Card;
@@ -48,7 +49,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class ThemesFragment extends Fragment {
+public class ThemesFragment extends Fragment implements ButtonClickListener{
 
     private List<Theme> themesList = new ArrayList<>();
     RecyclerView themesRecyclerView;
@@ -85,7 +86,7 @@ public class ThemesFragment extends Fragment {
         } else {
             themesList = savedInstanceState.getParcelableArrayList("themes");
         }
-        themeAdapter = new ThemeAdapter(themesList, getActivity());
+        themeAdapter = new ThemeAdapter(themesList, getActivity(),this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
@@ -135,6 +136,7 @@ public class ThemesFragment extends Fragment {
         themesRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), themesRecyclerView, new ClickListener() {
             @Override
             public void onClick(View v, int position) {
+
             }
 
             @Override
@@ -252,4 +254,12 @@ public class ThemesFragment extends Fragment {
 
     }
 
+    @Override
+    public void startIntentToCards(int position) {
+        Intent intent = new Intent(getActivity(), ThemeActivity.class);
+        Theme t = themesList.get(position);
+        intent.putExtra("theme", t);
+        intent.putExtra("position", position);
+        startActivityForResult(intent,1);
+    }
 }

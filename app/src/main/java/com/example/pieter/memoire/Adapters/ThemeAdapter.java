@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.pieter.memoire.Activities.ThemeActivity;
+import com.example.pieter.memoire.ClickListeners.ButtonClickListener;
 import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.Persistence.ThemeDao;
 import com.example.pieter.memoire.Persistence.ThemeDatabase;
@@ -27,10 +28,12 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
 
     private List<Theme> list;
     private Context context;
+    private ButtonClickListener buttonClickListener;
 
-    public ThemeAdapter(List<Theme> list, Context context) {
+    public ThemeAdapter(List<Theme> list, Context context,ButtonClickListener buttonClickListener) {
         this.list = list;
         this.context = context;
+        this.buttonClickListener = buttonClickListener;
     }
 
     @NonNull
@@ -81,12 +84,7 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
         holder.arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ThemeActivity.class);
-                Theme t = list.get(position);
-                intent.putExtra("theme", t);
-                intent.putExtra("position", position);
-                ((Activity) context).startActivityForResult(intent,1);
-
+                buttonClickListener.startIntentToCards(position);
             }
         });
 
@@ -99,7 +97,6 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
         }
         return 0;
     }
-
 }
 
 
