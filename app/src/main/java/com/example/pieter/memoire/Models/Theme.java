@@ -63,6 +63,11 @@ public class Theme implements Parcelable {
         this.cards.add(card);
     }
 
+    public void editCardFromList(Card card, int position)
+    {
+        this.cards.set(position,card);
+    }
+
     public void deleteCardFromList(int position) {this.cards.remove(position);}
 
     public int getId() {

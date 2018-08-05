@@ -88,6 +88,9 @@ public class MediaFragment extends Fragment {
     String videoPath;
     ThemeDatabase themeDatabase;
     CompositeDisposable compositeDisposable;
+    MediaAdapter adapter;
+    RecyclerView mediaRecyclerView;
+
 
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -122,8 +125,8 @@ public class MediaFragment extends Fragment {
             }
         });
 
-        final MediaAdapter adapter = new MediaAdapter(theme.getCards(), getActivity());
-        final RecyclerView mediaRecyclerView = (RecyclerView) v.findViewById(R.id.photosRecyclerView);
+        adapter = new MediaAdapter(theme.getCards(), getActivity());
+        mediaRecyclerView = (RecyclerView) v.findViewById(R.id.photosRecyclerView);
         mediaRecyclerView.setAdapter(adapter);
 
         //width is decided by Picasso in viewholder
@@ -140,128 +143,7 @@ public class MediaFragment extends Fragment {
         fab_photos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                uri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card");
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                final View dialogview = getLayoutInflater().inflate(R.layout.dialog_create_media, null);
-                final EditText inputTitle = (EditText) dialogview.findViewById(R.id.input_title);
-                final EditText inputDescription = (EditText) dialogview.findViewById(R.id.input_description);
-                final EditText inputFlickr = (EditText) dialogview.findViewById(R.id.flickr_input);
-                dialogImage = (ImageView) dialogview.findViewById(R.id.input_media);
-                dialogImage.setImageURI(uri);
-                final Spinner spinner = (Spinner) dialogview.findViewById(R.id.spinner);
-                ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
-                        getContext(), R.array.options, android.R.layout.simple_spinner_item);
-                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(spinnerAdapter);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (i == 3) {
-                            inputFlickr.setVisibility(View.VISIBLE);
-                        } else {
-                            inputFlickr.setVisibility(View.INVISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
-                Button btnImportMedia = (Button) dialogview.findViewById(R.id.btn_import_media);
-
-                btnImportMedia.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        verifyPermissions();
-                        switch (spinner.getSelectedItemPosition()) {
-                            case 0:
-                                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(takePicture, 0);
-                                break;//zero can be replaced with any action code}
-
-                            case 1:
-                                Intent choosePicture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                                startActivityForResult(choosePicture, 1);
-                                break;//zero can be replaced with any action code}
-
-                            case 2:
-                                Intent intent = new Intent();
-                                intent.setType("video/*");
-                                intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent, "Select Video"), 2);
-                                Toast.makeText(getActivity(), "lmao", Toast.LENGTH_SHORT).show();
-                                break;
-
-                            case 3:
-                                Gson gson = new GsonBuilder().create();
-                                FlickrData flickrData = gson.fromJson(getJSONFlickr(inputFlickr.getText().toString()), FlickrData.class);
-
-                                if (flickrData.stat.equals("ok")) {
-                                    for (Photo data : flickrData.photos.photo) {
-                                        // retrieve one photo
-                                        // http://farm{farmid}.staticflickr.com/{server-id}/{id}_{secret}{size}.jpg
-
-                                        String photoUrl = "http://farm%d.staticflickr.com/%s/%s_%s_n.jpg";
-                                        String baseurl = String.format(photoUrl, data.farm, data.server, data.id, data.secret);
-                                        uri = Uri.parse(baseurl);
-                                        //Bitmap bitmap = getImageBitmapFromUrl(baseurl);
-                                        //  dialogImage.setImageBitmap(bitmap);
-                                        Picasso.get().load(uri).fit().centerCrop().into(dialogImage);
-                                        videoPath = null;
-                                        break;
-
-                                    }
-                                }
-                        }
-
-
-                    }
-                });
-                Button btnCreateTheme = (Button) dialogview.findViewById(R.id.btn_create_media);
-                builder.setView(dialogview);
-
-                final AlertDialog dialog = builder.show();
-                btnCreateTheme.setOnClickListener(new View.OnClickListener()
-
-                {
-                    @Override
-                    public void onClick(View view) {
-
-                        if (inputTitle.getText().toString().isEmpty() || inputDescription.getText().toString().isEmpty()) {
-                            Toast.makeText(getActivity(), "Name and Description field can't be empty!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            if (videoPath != null && !videoPath.isEmpty()) {
-                                 final Card card = new Card(theme.getId(), videoPath, inputTitle.getText().toString()
-                                        , inputDescription.getText().toString(), true);
-
-                                        themeDatabase.getCardDao().addCard(card);
-                                        //add card to theme?
-
-                                theme.addCardToList(card);
-                                mediaRecyclerView.getRecycledViewPool().clear();
-                                adapter.notifyItemInserted(theme.getCards().size() - 1);
-                                dialog.dismiss();
-                            } else {
-                                 Card card = new Card(theme.getId(), uri.toString(), inputTitle.getText().toString()
-                                        , inputDescription.getText().toString(), false);
-
-                                        themeDatabase.getCardDao().addCard(card);
-                                        //add card to theme?
-
-                                theme.addCardToList(card);
-                                mediaRecyclerView.getRecycledViewPool().clear();
-                                adapter.notifyItemInserted(theme.getCards().size() - 1);
-                                dialog.dismiss();
-                            }
-                        }
-                    }
-                });
-
-
+                startCardDialog(false, -1);
             }
         });
 
@@ -271,25 +153,24 @@ public class MediaFragment extends Fragment {
 
                 ClickListener() {
                     @Override
-                    public void onClick(View v, int position) {
+                    public void onClick(View v, final int position) {
 
                         Card card = theme.getCards().get(position);
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        View dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details, null);
-                        TextView titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details);
-                        TextView descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details);
-                        ImageView imageDetails = (ImageView) dialogViewDetails.findViewById(R.id.image_details);
+                        View dialogViewDetailsImage =  getLayoutInflater().inflate(R.layout.media_details,null);
+                        View dialogViewDetailsVideo = getLayoutInflater().inflate(R.layout.media_details_video, null);
+
+                        TextView titleDetails = (TextView) dialogViewDetailsImage.findViewById(R.id.title_details);
+                        TextView descriptionDetails = (TextView) dialogViewDetailsImage.findViewById(R.id.description_details);
+                        ImageView imageDetails = (ImageView) dialogViewDetailsImage.findViewById(R.id.image_details);
+                        Button editButtonImage = (Button) dialogViewDetailsImage.findViewById(R.id.btn_edit_card);
+                        Button editButtonVideo = (Button) dialogViewDetailsVideo.findViewById(R.id.btn_edit_card_video);
                         final VideoView videoDetails;
 
-                        titleDetails.setText(card.getTitle());
-                        descriptionDetails.setText(card.getDescription());
-                        Picasso.get().load(Uri.parse(card.getUri())).into(imageDetails);
-
                         if (card.getHasVideo()) {
-                            dialogViewDetails = getLayoutInflater().inflate(R.layout.media_details_video, null);
-                            titleDetails = (TextView) dialogViewDetails.findViewById(R.id.title_details_video);
-                            descriptionDetails = (TextView) dialogViewDetails.findViewById(R.id.description_details_video);
-                            videoDetails = (VideoView) dialogViewDetails.findViewById(R.id.video_details);
+                            titleDetails = (TextView) dialogViewDetailsVideo.findViewById(R.id.title_details_video);
+                            descriptionDetails = (TextView) dialogViewDetailsVideo.findViewById(R.id.description_details_video);
+                            videoDetails = (VideoView) dialogViewDetailsVideo.findViewById(R.id.video_details);
                             titleDetails.setText(card.getTitle());
                             descriptionDetails.setText(card.getDescription());
 
@@ -305,8 +186,36 @@ public class MediaFragment extends Fragment {
 
                         }
 
-                        builder.setView(dialogViewDetails);
-                        builder.show();
+                        if(card.getHasVideo())
+                        {
+                            builder.setView(dialogViewDetailsVideo);
+                        }
+                        else {
+                            builder.setView(dialogViewDetailsImage);
+                        }
+
+                        final AlertDialog dialog =  builder.show();
+
+                        titleDetails.setText(card.getTitle());
+                        descriptionDetails.setText(card.getDescription());
+                        Picasso.get().load(Uri.parse(card.getUri())).into(imageDetails);
+                        editButtonImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                dialog.dismiss();
+                                startCardDialog(true,position);
+                            }
+                        });
+                        editButtonVideo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                dialog.dismiss();
+                                startCardDialog(true,position);
+                            }
+                        });
+
                     }
 
                     @Override
@@ -472,4 +381,181 @@ public class MediaFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(), permissions, 22);
         }
     }
+
+
+    private void startCardDialog(final boolean isEdit, final int position) {
+
+        if( uri == null ) {
+            uri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card");
+        }
+        else if(position != -1)
+        {
+            Card card = theme.getCards().get(position);
+            uri = Uri.parse(card.getUri());
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View dialogview = isEdit? getLayoutInflater().inflate(R.layout.dialog_edit_media, null):
+                getLayoutInflater().inflate(R.layout.dialog_create_media, null);
+        final EditText inputTitle = isEdit? (EditText) dialogview.findViewById(R.id.input_title_edit):
+                (EditText) dialogview.findViewById(R.id.input_title);
+        Button btnCreateTheme = isEdit ?(Button) dialogview.findViewById(R.id.btn_edit_media) :
+                (Button) dialogview.findViewById(R.id.btn_create_media);
+        final EditText inputDescription = isEdit? (EditText) dialogview.findViewById(R.id.input_description_edit):
+                (EditText) dialogview.findViewById(R.id.input_description);
+        final EditText inputFlickr = isEdit? (EditText) dialogview.findViewById(R.id.flickr_input_edit):
+                (EditText) dialogview.findViewById(R.id.flickr_input);
+        dialogImage = isEdit? (ImageView) dialogview.findViewById(R.id.input_media_edit) :
+                (ImageView) dialogview.findViewById(R.id.input_media);
+        final Spinner spinner = isEdit? (Spinner) dialogview.findViewById(R.id.spinner_edit):
+                (Spinner) dialogview.findViewById(R.id.spinner);
+        Button btnImportMedia = isEdit? (Button) dialogview.findViewById(R.id.btn_import_media_edit):
+                (Button) dialogview.findViewById(R.id.btn_import_media);
+        if(isEdit && position != -1)
+        {
+            Card card = theme.getCards().get(position);
+            inputTitle.setText(card.getTitle());
+            inputDescription.setText(card.getDescription());
+        }
+
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
+                getContext(), R.array.options, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 3) {
+                    inputFlickr.setVisibility(View.VISIBLE);
+                } else {
+                    inputFlickr.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        if(uri != null)
+        {
+            dialogImage.setImageURI(uri);
+        }
+        else
+        {
+            dialogImage.setImageURI(Uri.parse(""));
+        }
+        btnImportMedia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                verifyPermissions();
+                switch (spinner.getSelectedItemPosition()) {
+                    case 0:
+                        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(takePicture, 0);
+                        break;//zero can be replaced with any action code}
+
+                    case 1:
+                        Intent choosePicture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                        startActivityForResult(choosePicture, 1);
+                        break;//zero can be replaced with any action code}
+
+                    case 2:
+                        Intent intent = new Intent();
+                        intent.setType("video/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "Select Video"), 2);
+                        Toast.makeText(getActivity(), "lmao", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 3:
+                        Gson gson = new GsonBuilder().create();
+                        FlickrData flickrData = gson.fromJson(getJSONFlickr(inputFlickr.getText().toString()), FlickrData.class);
+
+                        if (flickrData.stat.equals("ok")) {
+                            for (Photo data : flickrData.photos.photo) {
+                                // retrieve one photo
+                                // http://farm{farmid}.staticflickr.com/{server-id}/{id}_{secret}{size}.jpg
+
+                                String photoUrl = "http://farm%d.staticflickr.com/%s/%s_%s_n.jpg";
+                                String baseurl = String.format(photoUrl, data.farm, data.server, data.id, data.secret);
+                                uri = Uri.parse(baseurl);
+                                //Bitmap bitmap = getImageBitmapFromUrl(baseurl);
+                                //  dialogImage.setImageBitmap(bitmap);
+                                Picasso.get().load(uri).fit().centerCrop().into(dialogImage);
+                                videoPath = null;
+                                break;
+
+                            }
+                        }
+                }
+
+
+            }
+        });
+        builder.setView(dialogview);
+
+        final AlertDialog dialog = builder.show();
+        btnCreateTheme.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View view) {
+
+                if (inputTitle.getText().toString().isEmpty() || inputDescription.getText().toString().isEmpty()) {
+                    Toast.makeText(getActivity(), "Name and Description field can't be empty!", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (videoPath != null && !videoPath.isEmpty()) {
+
+
+                        if(isEdit)
+                        {
+                            Card card = theme.getCards().get(position);
+                            card.setHasVideo(true);
+                            card.setTitle(inputTitle.getText().toString());
+                            card.setDescription(inputDescription.getText().toString());
+                            card.setUri(videoPath);
+                            themeDatabase.getCardDao().modifyCard(card);
+                            theme.editCardFromList(card,position);
+                            mediaRecyclerView.getRecycledViewPool().clear();
+                            adapter.notifyItemChanged(position);
+                        }
+                        else{
+                            Card card = new Card(theme.getId(), videoPath, inputTitle.getText().toString()
+                                    , inputDescription.getText().toString(), true);
+                            themeDatabase.getCardDao().addCard(card);
+                            theme.addCardToList(card);
+                            mediaRecyclerView.getRecycledViewPool().clear();
+                            adapter.notifyItemInserted(theme.getCards().size() - 1);
+                        }
+                        dialog.dismiss();
+                    } else {
+
+                        if(isEdit)
+                        {
+                            Card card = theme.getCards().get(position);
+                            card.setHasVideo(false);
+                            card.setTitle(inputTitle.getText().toString());
+                            card.setDescription(inputDescription.getText().toString());
+                            card.setUri(uri.toString());
+                            themeDatabase.getCardDao().modifyCard(card);
+                            theme.editCardFromList(card,position);
+                            adapter.notifyItemChanged(position);
+                        }
+                        else{
+                            Card card = new Card(theme.getId(), uri.toString(), inputTitle.getText().toString()
+                                    , inputDescription.getText().toString(), false);
+                            themeDatabase.getCardDao().addCard(card);
+                            theme.addCardToList(card);
+                            mediaRecyclerView.getRecycledViewPool().clear();
+                            adapter.notifyItemInserted(theme.getCards().size() - 1);
+                        }
+                        dialog.dismiss();
+                    }
+                }
+            }
+        });
+    }
+
 }
