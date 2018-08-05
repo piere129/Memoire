@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -105,6 +106,7 @@ public class ThemesFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 final View dialogview = getLayoutInflater().inflate(R.layout.dialog_create_theme, null);
                 final EditText inputName = (EditText) dialogview.findViewById(R.id.input_name);
+                ImageButton btnEditTheme = (ImageButton) dialogview.findViewById(R.id.btn_edit_theme);
                 Button btnCreateTheme = (Button) dialogview.findViewById(R.id.btn_create_theme);
 
                 builder.setView(dialogview);
@@ -133,14 +135,14 @@ public class ThemesFragment extends Fragment {
         themesRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), themesRecyclerView, new ClickListener() {
             @Override
             public void onClick(View v, int position) {
-
+/*
                 Intent intent = new Intent(getContext(), ThemeActivity.class);
                 getActivity().overridePendingTransition(R.anim.start, R.anim.end);
                 Theme t = themesList.get(position);
                 Log.d("wow", Integer.toString(position));
                 intent.putExtra("theme", t);
                 intent.putExtra("position", position);
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, 1);*/
             }
 
             @Override
