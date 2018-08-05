@@ -135,14 +135,6 @@ public class ThemesFragment extends Fragment {
         themesRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), themesRecyclerView, new ClickListener() {
             @Override
             public void onClick(View v, int position) {
-/*
-                Intent intent = new Intent(getContext(), ThemeActivity.class);
-                getActivity().overridePendingTransition(R.anim.start, R.anim.end);
-                Theme t = themesList.get(position);
-                Log.d("wow", Integer.toString(position));
-                intent.putExtra("theme", t);
-                intent.putExtra("position", position);
-                startActivityForResult(intent, 1);*/
             }
 
             @Override
