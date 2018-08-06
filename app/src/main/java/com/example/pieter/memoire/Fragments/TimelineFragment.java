@@ -1,5 +1,6 @@
 package com.example.pieter.memoire.Fragments;
 
+import android.arch.persistence.room.Database;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -62,4 +63,9 @@ public class TimelineFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        cards = themeDatabase.getCardDao().getAllCards();
+    }
 }

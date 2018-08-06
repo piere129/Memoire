@@ -116,28 +116,34 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         switch(fragment) {
             case "themes":
+                /*
                 if(fragmentManager.findFragmentByTag("themes") != null) {
                     fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("themes")).commit();
                 } else {
                     fragmentManager.beginTransaction().add(R.id.themesFragmentContainer, new ThemesFragment(), "themes").commit();
-                }
+                }*/
                 if(fragmentManager.findFragmentByTag("timeline") != null){
                     fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("timeline")).commit();
                 }
+                fragmentManager.beginTransaction().replace(R.id.themesFragmentContainer, new ThemesFragment(),"themes").commit();
                 break;
 
             case "timeline":
+                /*
                 if(fragmentManager.findFragmentByTag("timeline") != null) {
                     //if the fragment exists, show it.
                     fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("timeline")).commit();
                 } else {
                     //if the fragment does not exist, add it to fragment manager.
                     fragmentManager.beginTransaction().add(R.id.timeline_fragment_container, new TimelineFragment(), "timeline").commit();
-                }
+                }*/
                 if(fragmentManager.findFragmentByTag("themes") != null){
                     //if the other fragment is visible, hide it.
                     fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("themes")).commit();
                 }
+
+                fragmentManager.beginTransaction().replace(R.id.timeline_fragment_container, new TimelineFragment(),"timeline").commit();
+
                 break;
         }
     }
