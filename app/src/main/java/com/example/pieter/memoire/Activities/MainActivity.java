@@ -1,14 +1,9 @@
 package com.example.pieter.memoire.Activities;
 
-import android.arch.persistence.room.Room;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,24 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.pieter.memoire.Fragments.ThemesFragment;
-import com.example.pieter.memoire.Models.Theme;
-import com.example.pieter.memoire.Persistence.ThemeDatabase;
+import com.example.pieter.memoire.Fragments.TimelineFragment;
 import com.example.pieter.memoire.R;
-
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,7 +27,6 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
-    Fragment themesFragment;
 
 
     @Override
@@ -52,13 +35,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.findFragmentById(R.id.themesFragmentContainer) == null) {
+       /* if (fm.findFragmentById(R.id.themesFragmentContainer) == null) {
             themesFragment = new ThemesFragment();
             FragmentTransaction transaction = fm.beginTransaction();
             transaction.add(R.id.themesFragmentContainer, themesFragment);
             transaction.commit();
-        }
+        }*/
+
 
 
 
@@ -113,17 +96,50 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
+        if (id == R.id.nav_slideshow) {
+            selectFragment("timeline");
+        } else if (id == R.id.nav_gallery) {
+            Toast.makeText(getApplicationContext(),"test" + id,Toast.LENGTH_LONG).show();
+            selectFragment("themes");
 
         } else if (id == R.id.nav_settings) {
+            Toast.makeText(getApplicationContext(),"test" + id,Toast.LENGTH_LONG).show();
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void selectFragment(String fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        switch(fragment) {
+            case "themes":
+                if(fragmentManager.findFragmentByTag("themes") != null) {
+                    fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("themes")).commit();
+                } else {
+                    fragmentManager.beginTransaction().add(R.id.themesFragmentContainer, new ThemesFragment(), "themes").commit();
+                }
+                if(fragmentManager.findFragmentByTag("timeline") != null){
+                    fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("timeline")).commit();
+                }
+                break;
+
+            case "timeline":
+                if(fragmentManager.findFragmentByTag("timeline") != null) {
+                    //if the fragment exists, show it.
+                    fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag("timeline")).commit();
+                } else {
+                    //if the fragment does not exist, add it to fragment manager.
+                    fragmentManager.beginTransaction().add(R.id.timeline_fragment_container, new TimelineFragment(), "timeline").commit();
+                }
+                if(fragmentManager.findFragmentByTag("themes") != null){
+                    //if the other fragment is visible, hide it.
+                    fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("themes")).commit();
+                }
+                break;
+        }
     }
 
 }

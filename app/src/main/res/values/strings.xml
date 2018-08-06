@@ -15,5 +15,6 @@
         <item> Video gallery </item>
         <item> Flickr </item>
     </string-array>
+    <string name="title_activity_timeline">TimelineActivity</string>
 
 </resources>

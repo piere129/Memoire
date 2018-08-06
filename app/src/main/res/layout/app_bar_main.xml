@@ -21,5 +21,6 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main" />
+    <include layout="@layout/timeline_fragment_container"/>
 
 </android.support.design.widget.CoordinatorLayout>
