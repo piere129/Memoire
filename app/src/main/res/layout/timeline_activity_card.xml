@@ -1,0 +1,53 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardview_timeline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--  <TextView
+              android:id="@+id/media_title"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="8dp"
+              android:text="@string/card_title"
+              android:textColor="#000"
+              android:textSize="18sp" /> -->
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="150dp"
+            android:layout_height="150dp">
+
+
+
+            <ImageView
+                android:id="@+id/timeline_image_grid"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_alignTop="@id/play_button_video"
+                android:layout_alignBottom="@id/play_button_video"
+                android:layout_alignLeft="@id/play_button_video"
+                android:layout_alignRight="@id/play_button_video"
+                android:scaleType="fitXY"
+                />
+
+            <ImageView
+                android:id="@+id/play_button_video_timeline"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/play_button_overlay"
+                android:visibility="invisible"
+                />
+
+        </RelativeLayout>
+
+
+
+
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

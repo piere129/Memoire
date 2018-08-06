@@ -21,7 +21,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         parentColumns = "id",
         childColumns = "theme_id",
         onDelete = CASCADE))
-public class Card implements Parcelable {
+public class Card implements Parcelable, Comparable<Card> {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -178,4 +178,11 @@ public class Card implements Parcelable {
             return new Card[size];
         }
     };
+
+    @Override
+    public int compareTo(@NonNull Card card) {
+        if (getDate() == null || card.getDate() == null)
+            return 0;
+        return getDate().compareTo(card.getDate());
+    }
 }
