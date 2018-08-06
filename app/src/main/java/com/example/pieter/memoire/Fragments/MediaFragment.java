@@ -39,6 +39,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
 import com.example.pieter.memoire.Adapters.MediaAdapter;
 import com.example.pieter.memoire.ClickListeners.ClickListener;
 import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
@@ -52,6 +53,7 @@ import com.example.pieter.memoire.Utilities.Photo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -94,7 +96,15 @@ public class MediaFragment extends Fragment {
     RecyclerView mediaRecyclerView;
 
 
-
+    /**
+     * Initialises the Fragment and sets up the functionalities needed
+     * for the Fragment to work properly, like the setup for the RecyclerView
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Nullable
@@ -149,6 +159,20 @@ public class MediaFragment extends Fragment {
             }
         });
 
+        initOnClickRecyclerView();
+
+        return v;
+    }
+
+    /**
+     * Initialises the OnClick events for the RecyclerView.
+     * <p>
+     * This includes initialising an OnClick event showing a new dialog,
+     * with its' contents being based upon whether the Card has a Video or an Image.
+     * <p>
+     * The LongClick Event deletes the item
+     */
+    private void initOnClickRecyclerView() {
         mediaRecyclerView.addOnItemTouchListener(new
 
                 ItemTouchListener(getContext(), mediaRecyclerView, new
@@ -159,7 +183,7 @@ public class MediaFragment extends Fragment {
 
                         final Card card = theme.getCards().get(position);
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        View dialogViewDetailsImage =  getLayoutInflater().inflate(R.layout.media_details,null);
+                        View dialogViewDetailsImage = getLayoutInflater().inflate(R.layout.media_details, null);
                         View dialogViewDetailsVideo = getLayoutInflater().inflate(R.layout.media_details_video, null);
 
                         TextView titleDetails = (TextView) dialogViewDetailsImage.findViewById(R.id.title_details);
@@ -171,13 +195,10 @@ public class MediaFragment extends Fragment {
                         Button cardToTimelineButtonImage = (Button) dialogViewDetailsImage.findViewById(R.id.btn_add_card_to_timeline);
                         Button cardToTimelineButtonVideo = (Button) dialogViewDetailsVideo.findViewById(R.id.btn_add_card_to_timeline_video);
 
-                        if(card.getInTimeline() == 1)
-                        {
+                        if (card.getInTimeline() == 1) {
                             cardToTimelineButtonVideo.setText("Remove from timeline");
                             cardToTimelineButtonImage.setText("Remove from timeline");
-                        }
-                        else
-                        {
+                        } else {
                             cardToTimelineButtonVideo.setText("Add to timeline");
                             cardToTimelineButtonImage.setText("Add to timeline");
                         }
@@ -202,15 +223,13 @@ public class MediaFragment extends Fragment {
 
                         }
 
-                        if(card.getHasVideo())
-                        {
+                        if (card.getHasVideo()) {
                             builder.setView(dialogViewDetailsVideo);
-                        }
-                        else {
+                        } else {
                             builder.setView(dialogViewDetailsImage);
                         }
 
-                        final AlertDialog dialog =  builder.show();
+                        final AlertDialog dialog = builder.show();
 
                         titleDetails.setText(card.getTitle());
                         descriptionDetails.setText(card.getDescription());
@@ -221,7 +240,7 @@ public class MediaFragment extends Fragment {
                             public void onClick(View view) {
 
                                 dialog.dismiss();
-                                startCardDialog(true,position);
+                                startCardDialog(true, position);
                             }
                         });
                         editButtonVideo.setOnClickListener(new View.OnClickListener() {
@@ -229,23 +248,20 @@ public class MediaFragment extends Fragment {
                             public void onClick(View view) {
 
                                 dialog.dismiss();
-                                startCardDialog(true,position);
+                                startCardDialog(true, position);
                             }
                         });
 
                         cardToTimelineButtonVideo.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if(card.getInTimeline() == 1)
-                                {
+                                if (card.getInTimeline() == 1) {
                                     card.setInTimeline(0);
-                                }
-                                else
-                                {
+                                } else {
                                     card.setInTimeline(1);
                                 }
                                 themeDatabase.getCardDao().modifyCard(card);
-                                theme.editCardFromList(card,position);
+                                theme.editCardFromList(card, position);
                                 adapter.notifyItemChanged(position);
                                 dialog.dismiss();
                             }
@@ -254,16 +270,13 @@ public class MediaFragment extends Fragment {
                         cardToTimelineButtonImage.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if(card.getInTimeline() == 1)
-                                {
+                                if (card.getInTimeline() == 1) {
                                     card.setInTimeline(0);
-                                }
-                                else
-                                {
+                                } else {
                                     card.setInTimeline(1);
                                 }
                                 themeDatabase.getCardDao().modifyCard(card);
-                                theme.editCardFromList(card,position);
+                                theme.editCardFromList(card, position);
                                 adapter.notifyItemChanged(position);
                                 dialog.dismiss();
                             }
@@ -280,11 +293,17 @@ public class MediaFragment extends Fragment {
                         adapter.notifyItemRemoved(position);
                     }
                 }));
-
-        return v;
     }
 
 
+    /**
+     * Saves and persists the data passed through the Create Media dialog screen,
+     * with a switch case based upon which technique was used to import the media.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -317,6 +336,12 @@ public class MediaFragment extends Fragment {
         }
     }
 
+    /**
+     * Calculates the real path from an URI for a video.
+     *
+     * @param selectedVideoUri
+     * @return
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private String getRealPathFromURIForVideo(Uri selectedVideoUri) {
         String wholeID = DocumentsContract.getDocumentId(selectedVideoUri);
@@ -335,6 +360,12 @@ public class MediaFragment extends Fragment {
         return filePath;
     }
 
+    /**
+     * Converts the Flickr Result to a JSON file and returns its' toString value
+     *
+     * @param inputTag
+     * @return
+     */
     private String getJSONFlickr(String inputTag) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
@@ -392,6 +423,11 @@ public class MediaFragment extends Fragment {
         return buffer.toString();
     }
 
+    /**
+     * Saves the image imported by Camera
+     *
+     * @param data
+     */
     private void saveImage(Intent data) {
         Bundle extras = data.getExtras();
         Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -405,6 +441,13 @@ public class MediaFragment extends Fragment {
     }
 
 
+    /**
+     * Converts the result for importing images from gallery to a usable Image URI
+     *
+     * @param inContext
+     * @param inImage
+     * @return
+     */
     private Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -412,6 +455,12 @@ public class MediaFragment extends Fragment {
         return Uri.parse(path);
     }
 
+    /**
+     * Returns the realPath of a URI for a picture
+     *
+     * @param uri
+     * @return
+     */
     private String getRealPathFromURI(Uri uri) {
         Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
@@ -419,6 +468,9 @@ public class MediaFragment extends Fragment {
         return cursor.getString(idx);
     }
 
+    /**
+     * Verifies permissions for localstorage, Camera, et cetera.
+     */
     private void verifyPermissions() {
         String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.INTERNET};
@@ -436,35 +488,42 @@ public class MediaFragment extends Fragment {
     }
 
 
+    /**
+     * Shows an edit / create media dialog based upon the isEdit boolean.
+     * <p>
+     * It implements a spinner with 4 options: taking a picture with camera, importing
+     * a video / photo from the gallery or using the Flickr api to return a picture using
+     * a custom tag.
+     *
+     * @param isEdit
+     * @param position
+     */
     private void startCardDialog(final boolean isEdit, final int position) {
 
-        if( uri == null ) {
+        if (uri == null) {
             uri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card");
-        }
-        else if(position != -1)
-        {
+        } else if (position != -1) {
             Card card = theme.getCards().get(position);
             uri = Uri.parse(card.getUri());
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View dialogview = isEdit? getLayoutInflater().inflate(R.layout.dialog_edit_media, null):
+        View dialogview = isEdit ? getLayoutInflater().inflate(R.layout.dialog_edit_media, null) :
                 getLayoutInflater().inflate(R.layout.dialog_create_media, null);
-        final EditText inputTitle = isEdit? (EditText) dialogview.findViewById(R.id.input_title_edit):
+        final EditText inputTitle = isEdit ? (EditText) dialogview.findViewById(R.id.input_title_edit) :
                 (EditText) dialogview.findViewById(R.id.input_title);
-        Button btnCreateTheme = isEdit ?(Button) dialogview.findViewById(R.id.btn_edit_media) :
+        Button btnCreateTheme = isEdit ? (Button) dialogview.findViewById(R.id.btn_edit_media) :
                 (Button) dialogview.findViewById(R.id.btn_create_media);
-        final EditText inputDescription = isEdit? (EditText) dialogview.findViewById(R.id.input_description_edit):
+        final EditText inputDescription = isEdit ? (EditText) dialogview.findViewById(R.id.input_description_edit) :
                 (EditText) dialogview.findViewById(R.id.input_description);
-        final EditText inputFlickr = isEdit? (EditText) dialogview.findViewById(R.id.flickr_input_edit):
+        final EditText inputFlickr = isEdit ? (EditText) dialogview.findViewById(R.id.flickr_input_edit) :
                 (EditText) dialogview.findViewById(R.id.flickr_input);
-        dialogImage = isEdit? (ImageView) dialogview.findViewById(R.id.input_media_edit) :
+        dialogImage = isEdit ? (ImageView) dialogview.findViewById(R.id.input_media_edit) :
                 (ImageView) dialogview.findViewById(R.id.input_media);
-        final Spinner spinner = isEdit? (Spinner) dialogview.findViewById(R.id.spinner_edit):
+        final Spinner spinner = isEdit ? (Spinner) dialogview.findViewById(R.id.spinner_edit) :
                 (Spinner) dialogview.findViewById(R.id.spinner);
-        Button btnImportMedia = isEdit? (Button) dialogview.findViewById(R.id.btn_import_media_edit):
+        Button btnImportMedia = isEdit ? (Button) dialogview.findViewById(R.id.btn_import_media_edit) :
                 (Button) dialogview.findViewById(R.id.btn_import_media);
-        if(isEdit && position != -1)
-        {
+        if (isEdit && position != -1) {
             Card card = theme.getCards().get(position);
             inputTitle.setText(card.getTitle());
             inputDescription.setText(card.getDescription());
@@ -490,12 +549,9 @@ public class MediaFragment extends Fragment {
             }
         });
 
-        if(uri != null)
-        {
+        if (uri != null) {
             dialogImage.setImageURI(uri);
-        }
-        else
-        {
+        } else {
             dialogImage.setImageURI(Uri.parse(""));
         }
         btnImportMedia.setOnClickListener(new View.OnClickListener() {
@@ -562,8 +618,7 @@ public class MediaFragment extends Fragment {
                     if (videoPath != null && !videoPath.isEmpty()) {
 
 
-                        if(isEdit)
-                        {
+                        if (isEdit) {
                             Card card = theme.getCards().get(position);
                             card.setHasVideo(true);
                             card.setTitle(inputTitle.getText().toString());
@@ -571,11 +626,10 @@ public class MediaFragment extends Fragment {
                             card.setUri(videoPath);
                             card.setDate(DateFormat.getDateTimeInstance().format(new Date()));
                             themeDatabase.getCardDao().modifyCard(card);
-                            theme.editCardFromList(card,position);
+                            theme.editCardFromList(card, position);
                             mediaRecyclerView.getRecycledViewPool().clear();
                             adapter.notifyItemChanged(position);
-                        }
-                        else{
+                        } else {
                             Card card = new Card(theme.getId(), videoPath, inputTitle.getText().toString()
                                     , inputDescription.getText().toString(), true);
                             themeDatabase.getCardDao().addCard(card);
@@ -586,8 +640,7 @@ public class MediaFragment extends Fragment {
                         dialog.dismiss();
                     } else {
 
-                        if(isEdit)
-                        {
+                        if (isEdit) {
                             Card card = theme.getCards().get(position);
                             card.setHasVideo(false);
                             card.setTitle(inputTitle.getText().toString());
@@ -595,10 +648,9 @@ public class MediaFragment extends Fragment {
                             card.setUri(uri.toString());
                             card.setDate(DateFormat.getDateTimeInstance().format(new Date()));
                             themeDatabase.getCardDao().modifyCard(card);
-                            theme.editCardFromList(card,position);
+                            theme.editCardFromList(card, position);
                             adapter.notifyItemChanged(position);
-                        }
-                        else{
+                        } else {
                             Card card = new Card(theme.getId(), uri.toString(), inputTitle.getText().toString()
                                     , inputDescription.getText().toString(), false);
                             themeDatabase.getCardDao().addCard(card);

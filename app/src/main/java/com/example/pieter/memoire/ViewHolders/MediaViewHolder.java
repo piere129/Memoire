@@ -44,6 +44,11 @@ public class MediaViewHolder extends RecyclerView.ViewHolder {
     TextView description;*/
 
 
+    /**
+     * Sets the data passed by the MediaAdapter.
+     * Checks whether the uri is of an image or a video and saves the image/creates a thumbnail
+     * @param card
+     */
     public void setData(Card card) {
         //title.setText(card.getTitle());
        // description.setText(card.getDescription());

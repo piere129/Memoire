@@ -12,6 +12,14 @@ public class ItemTouchListener implements RecyclerView.OnItemTouchListener {
     GestureDetector gestureDetector;
     private ClickListener clickListener;
 
+    /**
+     * Specific ItemTouchListener implementing the Clicklistener interface.
+     * It defines the Onclick and OnLongClick
+     *
+     * @param context
+     * @param recyclerView
+     * @param clickListener
+     */
     public ItemTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
         this.clickListener = clickListener;
         gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
@@ -32,6 +40,13 @@ public class ItemTouchListener implements RecyclerView.OnItemTouchListener {
         });
     }
 
+    /**
+     * Registers click events.
+     *
+     * @param recyclerView
+     * @param e
+     * @return
+     */
     @Override
     public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent e) {
 

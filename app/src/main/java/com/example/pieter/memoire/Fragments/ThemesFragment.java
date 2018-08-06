@@ -49,7 +49,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class ThemesFragment extends Fragment implements ButtonClickListener{
+public class ThemesFragment extends Fragment implements ButtonClickListener {
 
     private List<Theme> themesList = new ArrayList<>();
     RecyclerView themesRecyclerView;
@@ -60,6 +60,15 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
+    /**
+     * Initialises the Fragment and does the setup for the Recyclerview and
+     * its necessary click events for creating a new theme or deleting themes.
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,8 +81,7 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
         if (savedInstanceState == null || !savedInstanceState.containsKey("themes")) {
             //generateData();
             List<Theme> themes = themeDatabase.getThemeDao().getThemes();
-            for(Theme t : themes)
-            {
+            for (Theme t : themes) {
                 Theme temp = t;
                 //.getCardsFromTheme(temp.getId())
                 //temp.setCards();
@@ -86,7 +94,7 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
         } else {
             themesList = savedInstanceState.getParcelableArrayList("themes");
         }
-        themeAdapter = new ThemeAdapter(themesList, getActivity(),this);
+        themeAdapter = new ThemeAdapter(themesList, getActivity(), this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
@@ -135,6 +143,7 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
             }
         });
 
+
         themesRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), themesRecyclerView, new ClickListener() {
             @Override
             public void onClick(View v, int position) {
@@ -149,47 +158,24 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
         return v;
     }
 
-    private void generateData() {
-
-        List<Card> cards1 = new ArrayList<>();
-        cards1.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/relations").toString()
-                , "Card 1", "Something about relationships"));
-        cards1.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/health").toString(), "Card 2", "Something about life"));
-        cards1.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/firewatch").toString(), "Card 3", "Something about home"));
-        cards1.add(new Card("Card 4", "Something about nothing"));
-
-        List<Card> cards2 = new ArrayList<>();
-        cards2.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/firewatch").toString(), "Card 1", "Something about life"));
-        cards2.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/relations").toString(), "Card 2", "Something about living"));
-        cards2.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/health").toString(), "Card 3", "Something about life"));
-
-        List<Card> cards3 = new ArrayList<>();
-        cards3.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/health").toString(), "Card 3", "Something about life"));
-        cards3.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/firewatch").toString(), "Card 1", "Something about life"));
-        cards3.add(new Card(Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image").toString(), "Card 2", "Something about living"));
-
-
-        Theme theme1 = new Theme("Relaties");
-        themesList.add(theme1);
-
-        Theme theme2 = new Theme("Wonen", cards1);
-        themesList.add(theme2);
-
-        Theme theme3 = new Theme("Vrijetijd & Dagbesteding", cards2);
-        themesList.add(theme3);
-
-        Theme theme4 = new Theme("Gezondheid & Welzijn", cards3);
-        themesList.add(theme4);
-
-        //load other themes v
-    }
-
+    /**
+     * Saves the state of the fragment on screen rotation
+     *
+     * @param outState
+     */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelableArrayList("themes", new ArrayList<Theme>(themesList));
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * Allows the editing of theme name
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -206,6 +192,11 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
         }
     }
 
+    /**
+     * Adds a theme to the themeDatabase and reloads the fragment
+     *
+     * @param s
+     */
     private void addTheme(String s) {
         final String temp = s;
 
@@ -213,8 +204,13 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
 
         themeDatabase.getThemeDao().addTheme(t);
         loadData();
-        }
+    }
 
+    /**
+     * Deletes a theme from the themeDatabase and reloads the fragment
+     *
+     * @param s
+     */
     private void deleteTheme(int position) {
         final int temp = position;
 
@@ -223,21 +219,20 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
 
     }
 
-    private void updateTheme(Theme t) {
-
-        final Theme temp = t;
-
-        themeDatabase.getThemeDao().modifyTheme(temp);
-        loadData();
-    }
-
-
+    /**
+     * Calls the themes and passes it to a new method to reload the data
+     */
     private void loadData() {
-        List<Theme> themes =themeDatabase.getThemeDao().getThemes();
+        List<Theme> themes = themeDatabase.getThemeDao().getThemes();
         onGetAllThemeSuccess(themes);
 
     }
 
+    /**
+     * Reloads the themes in the fragment
+     *
+     * @param themes
+     */
     private void onGetAllThemeSuccess(List<Theme> themes) {
         themesList.clear();
         for (Theme t : themes) {
@@ -249,6 +244,9 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
         themeAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Destroys unnecessary Garbage
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -256,12 +254,17 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
 
     }
 
+    /**
+     * starts an Intent to ThemeActivity
+     *
+     * @param position
+     */
     @Override
     public void startIntentToCards(int position) {
         Intent intent = new Intent(getActivity(), ThemeActivity.class);
         Theme t = themesList.get(position);
         intent.putExtra("theme", t);
         intent.putExtra("position", position);
-        startActivityForResult(intent,1);
+        startActivityForResult(intent, 1);
     }
 }

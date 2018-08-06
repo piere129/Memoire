@@ -24,6 +24,14 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaViewHolder> {
         this.context = context;
     }
 
+
+    /**
+     * Inflates the elements added to the Recyclerview
+     *
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public MediaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -32,11 +40,23 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaViewHolder> {
         return mediaViewHolder;
     }
 
+    /**
+     * Prompts the Viewholder to set the data of the Object
+     * to the view
+     *
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull MediaViewHolder holder, int position) {
         holder.setData(list.get(position));
     }
 
+    /**
+     * Returns the itemcount of Objects
+     *
+     * @return
+     */
     @Override
     public int getItemCount() {
         {

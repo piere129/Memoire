@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TimelineViewHolder extends RecyclerView.ViewHolder  {
+public class TimelineViewHolder extends RecyclerView.ViewHolder {
 
     private int size = 120;
     @BindView(R.id.timeline_image_grid)
@@ -29,18 +29,21 @@ public class TimelineViewHolder extends RecyclerView.ViewHolder  {
         ButterKnife.bind(this, itemView);
     }
 
-    public void setData(Card card)
-    {
-        if(card.getUri().isEmpty() || card.getUri() == null) {
+    /**
+     * Sets the data passed by the TimelineAdapter.
+     * Checks whether the uri is of an image or a video and saves the image/creates a thumbnail
+     *
+     * @param card
+     */
+    public void setData(Card card) {
+        if (card.getUri().isEmpty() || card.getUri() == null) {
             Picasso.get().load(R.drawable.default_image_card).resize(size, size).centerCrop().into(imageView);
 
-        }
-        else {
+        } else {
             Uri uri = Uri.parse(card.getUri());
             if (!card.getHasVideo()) {
                 Picasso.get().load(uri).fit().centerCrop().into(imageView);
-            }
-            else {
+            } else {
                 Bitmap bitmap2 = ThumbnailUtils.createVideoThumbnail(card.getUri(), MediaStore.Video.Thumbnails.MICRO_KIND);
                 imageView.setImageBitmap(bitmap2);
                 overlay.setVisibility(View.VISIBLE);

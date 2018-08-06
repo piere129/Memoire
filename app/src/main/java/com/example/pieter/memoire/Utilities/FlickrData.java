@@ -1,5 +1,8 @@
 package com.example.pieter.memoire.Utilities;
 
+/**
+ * Necessary class for manipulating Flickr data. This is the upper class
+ */
 public class FlickrData {
     public Photos photos;
     public String stat;

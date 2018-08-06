@@ -37,6 +37,11 @@ public class ThemesViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
+    /**
+     * Saves the data passed by the ThemeAdapter
+     *
+     * @param theme
+     */
     public void setData(Theme theme) {
         name.setText(theme.getName());
     }

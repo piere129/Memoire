@@ -27,7 +27,6 @@ public class Card implements Parcelable, Comparable<Card> {
     @NonNull
     private int id;
 
-
     @ColumnInfo(name="theme_id")
     private int themeId;
 

@@ -15,15 +15,32 @@ import io.reactivex.Flowable;
 @Dao
 public interface ThemeDao {
 
+    /**
+     * Adds a theme to the database
+     * @param theme
+     */
     @Insert
     public void addTheme(Theme theme);
 
+    /**
+     * Updates a theme from the database
+     * @param theme
+     */
     @Update
     public void modifyTheme(Theme theme);
 
+    /**
+     * Deletes a theme from the database
+     * @param theme
+     */
     @Delete
     public void deleteTheme(Theme theme);
 
+    /**
+
+     * Gets all themes
+     * @return
+     */
     @Query("select * from Theme")
     List<Theme> getThemes();
 

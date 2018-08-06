@@ -42,6 +42,15 @@ public class TimelineFragment extends Fragment {
     ThemeDatabase themeDatabase;
 
 
+    /**
+     * Initialises the TimelineFragment and binds its' Recyclerview +
+     * the Onclick event for showing details of the card
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,7 +63,7 @@ public class TimelineFragment extends Fragment {
         cards = themeDatabase.getCardDao().getCardsInGallery();
         Collections.sort(cards);
 
-        TimelineAdapter adapter = new TimelineAdapter(cards,getActivity());
+        TimelineAdapter adapter = new TimelineAdapter(cards, getActivity());
         RecyclerView timelineRecyclerView = (RecyclerView) v.findViewById(R.id.timeline_recyclerview);
         timelineRecyclerView.setAdapter(adapter);
         timelineRecyclerView.setTag("timeline_recyclerview");
@@ -82,15 +91,19 @@ public class TimelineFragment extends Fragment {
                 }));
 
 
-
         return v;
     }
 
+    /**
+     * Method for initialising the details dialog
+     *
+     * @param position
+     */
     private void setupDetailsDialog(int position) {
 
         final Card card = cards.get(position);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View dialogViewDetailsImage =  getLayoutInflater().inflate(R.layout.media_details,null);
+        View dialogViewDetailsImage = getLayoutInflater().inflate(R.layout.media_details, null);
         View dialogViewDetailsVideo = getLayoutInflater().inflate(R.layout.media_details_video, null);
 
         TextView titleDetails = (TextView) dialogViewDetailsImage.findViewById(R.id.title_details);
@@ -124,15 +137,13 @@ public class TimelineFragment extends Fragment {
             });
         }
 
-        if(card.getHasVideo())
-        {
+        if (card.getHasVideo()) {
             builder.setView(dialogViewDetailsVideo);
-        }
-        else {
+        } else {
             builder.setView(dialogViewDetailsImage);
         }
 
-        final AlertDialog dialog =  builder.show();
+        final AlertDialog dialog = builder.show();
 
         titleDetails.setText(card.getTitle());
         descriptionDetails.setText(card.getDescription());

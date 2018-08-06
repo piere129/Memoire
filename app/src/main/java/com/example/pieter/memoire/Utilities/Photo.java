@@ -1,5 +1,9 @@
 package com.example.pieter.memoire.Utilities;
 
+/**
+ * Necessary class for manipulating Flickr data. This is the lowest class,
+ * contained by the FlickrData-class Photos class, and contains the actual image URI
+ */
 public class Photo {
     public String id;
     public String owner;

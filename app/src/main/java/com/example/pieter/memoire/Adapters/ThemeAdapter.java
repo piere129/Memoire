@@ -30,12 +30,19 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
     private Context context;
     private ButtonClickListener buttonClickListener;
 
-    public ThemeAdapter(List<Theme> list, Context context,ButtonClickListener buttonClickListener) {
+    public ThemeAdapter(List<Theme> list, Context context, ButtonClickListener buttonClickListener) {
         this.list = list;
         this.context = context;
         this.buttonClickListener = buttonClickListener;
     }
 
+    /**
+     * Inflates the elements added to the Recyclerview
+     *
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public ThemesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,6 +51,14 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
         return themesViewHolder;
     }
 
+    /**
+     * Prompts the Viewholder to set the data of the Object
+     * to the view. It also sets OnclickListeners to the various
+     * Buttons added to the view item
+     *
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(ThemesViewHolder holder, final int position) {
         holder.setData(list.get(position));
@@ -90,6 +105,11 @@ public class ThemeAdapter extends RecyclerView.Adapter<ThemesViewHolder> {
 
     }
 
+    /**
+     * Returns the itemcount of Objects
+     *
+     * @return
+     */
     @Override
     public int getItemCount() {
         if (list != null) {

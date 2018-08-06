@@ -2,6 +2,10 @@ package com.example.pieter.memoire.Utilities;
 
 import java.util.List;
 
+/**
+ * Necessary class for manipulating Flickr data. This is the middle class,
+ * contained by the FlickrData-class and containing a List of Photo Objects
+ */
 public class Photos {
     public int page;
     public int pages;

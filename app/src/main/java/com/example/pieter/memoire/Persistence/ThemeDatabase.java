@@ -13,14 +13,21 @@ public abstract class ThemeDatabase extends RoomDatabase {
     public static final String DATABASE_NAME = "ThemeDatabase";
 
     public abstract ThemeDao getThemeDao();
+
     public abstract CardDao getCardDao();
 
     private static ThemeDatabase instance;
 
-    public static ThemeDatabase getInstance(Context context)
-    {
-        if(instance == null)
-        {
+    /**
+     * Returns a Singleton Object of this class.
+     * The purpose of this class is to provide the DAO's for
+     * data manipulation in the database.
+     *
+     * @param context
+     * @return
+     */
+    public static ThemeDatabase getInstance(Context context) {
+        if (instance == null) {
             instance = Room.databaseBuilder(context, ThemeDatabase.class, DATABASE_NAME).allowMainThreadQueries()
                     .fallbackToDestructiveMigration().build();
         }
