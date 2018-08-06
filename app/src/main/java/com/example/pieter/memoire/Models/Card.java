@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.net.Uri;
 import android.os.Parcel;
@@ -20,7 +21,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 @Entity(foreignKeys = @ForeignKey(entity = Theme.class,
         parentColumns = "id",
         childColumns = "theme_id",
-        onDelete = CASCADE))
+        onDelete = CASCADE), indices = @Index("theme_id"))
 public class Card implements Parcelable, Comparable<Card> {
 
     @PrimaryKey(autoGenerate = true)
