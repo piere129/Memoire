@@ -28,7 +28,7 @@ public interface CardDao {
     @Query("Select * from Card where theme_id=:themeId")
     public List<Card> getCardsFromTheme(int themeId);
 
-    @Query("Select * from Card where in_gallery=1")
+    @Query("Select * from Card where in_timeline=1")
     public List<Card> getCardsInGallery();
 
     @Query("SELECT * FROM Card")

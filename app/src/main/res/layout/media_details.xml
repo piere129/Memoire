@@ -1,62 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/media_details"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
     android:padding="15dp">
 
     <TextView
-        android:textStyle="bold"
-        android:textSize="22sp"
-        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Title:"/>
+        android:layout_marginTop="10dp"
+        android:text="Title:"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:textSize="15sp"
-        android:layout_marginTop="10dp"
         android:id="@+id/title_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
+        android:layout_marginTop="10dp"
+        android:textSize="15sp" />
 
     <TextView
-        android:textStyle="bold"
-        android:textSize="22sp"
-        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description:"/>
+        android:layout_marginTop="10dp"
+        android:text="Description:"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:textSize="15sp"
-        android:layout_marginTop="10dp"
         android:id="@+id/description_details"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="15sp" />
 
 
     <TextView
-        android:textStyle="bold"
-        android:textSize="22sp"
-        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Image:"/>
+        android:layout_marginTop="10dp"
+        android:text="Image:"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
     <ImageView
-        android:layout_marginTop="10dp"
         android:id="@+id/image_details"
         android:layout_width="150dp"
-        android:layout_height="150dp" />
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp" />
 
-    <Button
-        android:id="@+id/btn_edit_card"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit Card" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_edit_card"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:text="Edit Card"
+            android:layout_margin="10dp"/>
+
+        <Button
+            android:id="@+id/btn_add_card_to_timeline"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+
+    </LinearLayout>
 </LinearLayout>

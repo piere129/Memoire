@@ -31,8 +31,8 @@ public class Card implements Parcelable, Comparable<Card> {
     @ColumnInfo(name="theme_id")
     private int themeId;
 
-    @ColumnInfo(name="in_gallery")
-    private int inGallery;
+    @ColumnInfo(name="in_timeline")
+    private int inTimeline;
 
     @ColumnInfo(name = "card_date")
     private String date;
@@ -95,12 +95,12 @@ public class Card implements Parcelable, Comparable<Card> {
         this.themeId = themeId;
     }
 
-    public int getInGallery() {
-        return inGallery;
+    public int getInTimeline() {
+        return inTimeline;
     }
 
-    public void setInGallery(int inGallery) {
-        this.inGallery = inGallery;
+    public void setInTimeline(int inTimeline) {
+        this.inTimeline = inTimeline;
     }
 
     public boolean getHasVideo() {
@@ -154,7 +154,7 @@ public class Card implements Parcelable, Comparable<Card> {
     protected Card(Parcel in) {
         id = in.readInt();
         themeId = in.readInt();
-        inGallery = in.readInt();
+        inTimeline = in.readInt();
         date = in.readString();
         uri = in.readString();
         title = in.readString();
@@ -171,7 +171,7 @@ public class Card implements Parcelable, Comparable<Card> {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeInt(themeId);
-        dest.writeInt(inGallery);
+        dest.writeInt(inTimeline);
         dest.writeString(date);
         dest.writeString(uri);
         dest.writeString(title);

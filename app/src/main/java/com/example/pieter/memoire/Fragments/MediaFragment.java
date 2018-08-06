@@ -155,7 +155,7 @@ public class MediaFragment extends Fragment {
                     @Override
                     public void onClick(View v, final int position) {
 
-                        Card card = theme.getCards().get(position);
+                        final Card card = theme.getCards().get(position);
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         View dialogViewDetailsImage =  getLayoutInflater().inflate(R.layout.media_details,null);
                         View dialogViewDetailsVideo = getLayoutInflater().inflate(R.layout.media_details_video, null);
@@ -165,6 +165,20 @@ public class MediaFragment extends Fragment {
                         ImageView imageDetails = (ImageView) dialogViewDetailsImage.findViewById(R.id.image_details);
                         Button editButtonImage = (Button) dialogViewDetailsImage.findViewById(R.id.btn_edit_card);
                         Button editButtonVideo = (Button) dialogViewDetailsVideo.findViewById(R.id.btn_edit_card_video);
+                        Button cardToTimelineButtonImage = (Button) dialogViewDetailsImage.findViewById(R.id.btn_add_card_to_timeline);
+                        Button cardToTimelineButtonVideo = (Button) dialogViewDetailsVideo.findViewById(R.id.btn_add_card_to_timeline_video);
+
+                        if(card.getInTimeline() == 1)
+                        {
+                            cardToTimelineButtonVideo.setText("Remove from timeline");
+                            cardToTimelineButtonImage.setText("Remove from timeline");
+                        }
+                        else
+                        {
+                            cardToTimelineButtonVideo.setText("Add to timeline");
+                            cardToTimelineButtonImage.setText("Add to timeline");
+                        }
+
                         final VideoView videoDetails;
 
                         if (card.getHasVideo()) {
@@ -213,6 +227,42 @@ public class MediaFragment extends Fragment {
 
                                 dialog.dismiss();
                                 startCardDialog(true,position);
+                            }
+                        });
+
+                        cardToTimelineButtonVideo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(card.getInTimeline() == 1)
+                                {
+                                    card.setInTimeline(0);
+                                }
+                                else
+                                {
+                                    card.setInTimeline(1);
+                                }
+                                themeDatabase.getCardDao().modifyCard(card);
+                                theme.editCardFromList(card,position);
+                                adapter.notifyItemChanged(position);
+                                dialog.dismiss();
+                            }
+                        });
+
+                        cardToTimelineButtonImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(card.getInTimeline() == 1)
+                                {
+                                    card.setInTimeline(0);
+                                }
+                                else
+                                {
+                                    card.setInTimeline(1);
+                                }
+                                themeDatabase.getCardDao().modifyCard(card);
+                                theme.editCardFromList(card,position);
+                                adapter.notifyItemChanged(position);
+                                dialog.dismiss();
                             }
                         });
 

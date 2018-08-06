@@ -42,7 +42,7 @@ public class TimelineFragment extends Fragment {
 
         themeDatabase = ThemeDatabase.getInstance(getActivity());
 
-        cards = themeDatabase.getCardDao().getAllCards();
+        cards = themeDatabase.getCardDao().getCardsInGallery();
         Collections.sort(cards);
 
         TimelineAdapter adapter = new TimelineAdapter(cards,getActivity());
