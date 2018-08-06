@@ -1,22 +1,31 @@
 package com.example.pieter.memoire.Fragments;
 
 import android.arch.persistence.room.Database;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.example.pieter.memoire.Adapters.TimelineAdapter;
+import com.example.pieter.memoire.ClickListeners.ClickListener;
+import com.example.pieter.memoire.ClickListeners.ItemTouchListener;
 import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Persistence.ThemeDatabase;
 import com.example.pieter.memoire.R;
 import com.example.pieter.memoire.Utilities.GridAutofitLayoutManager;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.ArrayList;
@@ -48,6 +57,7 @@ public class TimelineFragment extends Fragment {
         TimelineAdapter adapter = new TimelineAdapter(cards,getActivity());
         RecyclerView timelineRecyclerView = (RecyclerView) v.findViewById(R.id.timeline_recyclerview);
         timelineRecyclerView.setAdapter(adapter);
+        timelineRecyclerView.setTag("timeline_recyclerview");
 
         RecyclerView.LayoutManager layoutManager = new GridAutofitLayoutManager(getActivity(), 400);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -58,10 +68,75 @@ public class TimelineFragment extends Fragment {
         itemAnimator.setRemoveDuration(1000);
         timelineRecyclerView.setItemAnimator(itemAnimator);
 
-        
+        timelineRecyclerView.addOnItemTouchListener(new ItemTouchListener(getContext(), timelineRecyclerView,
+                new ClickListener() {
+                    @Override
+                    public void onClick(View v, int position) {
+                        setupDetailsDialog(position);
+                    }
+
+                    @Override
+                    public void onLongClick(View v, int position) {
+
+                    }
+                }));
 
 
 
         return v;
+    }
+
+    private void setupDetailsDialog(int position) {
+
+        final Card card = cards.get(position);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View dialogViewDetailsImage =  getLayoutInflater().inflate(R.layout.media_details,null);
+        View dialogViewDetailsVideo = getLayoutInflater().inflate(R.layout.media_details_video, null);
+
+        TextView titleDetails = (TextView) dialogViewDetailsImage.findViewById(R.id.title_details);
+        TextView descriptionDetails = (TextView) dialogViewDetailsImage.findViewById(R.id.description_details);
+        TextView dateDetails = (TextView) dialogViewDetailsImage.findViewById(R.id.date_details);
+        ImageView imageDetails = (ImageView) dialogViewDetailsImage.findViewById(R.id.image_details);
+        Button editButtonImage = (Button) dialogViewDetailsImage.findViewById(R.id.btn_edit_card);
+        Button editButtonVideo = (Button) dialogViewDetailsVideo.findViewById(R.id.btn_edit_card_video);
+        Button cardToTimelineButtonImage = (Button) dialogViewDetailsImage.findViewById(R.id.btn_add_card_to_timeline);
+        Button cardToTimelineButtonVideo = (Button) dialogViewDetailsVideo.findViewById(R.id.btn_add_card_to_timeline_video);
+        editButtonImage.setVisibility(View.INVISIBLE);
+        editButtonVideo.setVisibility(View.INVISIBLE);
+        cardToTimelineButtonImage.setVisibility(View.INVISIBLE);
+        cardToTimelineButtonVideo.setVisibility(View.INVISIBLE);
+
+        final VideoView videoDetails;
+
+        if (card.getHasVideo()) {
+            titleDetails = (TextView) dialogViewDetailsVideo.findViewById(R.id.title_details_video);
+            descriptionDetails = (TextView) dialogViewDetailsVideo.findViewById(R.id.description_details_video);
+            dateDetails = (TextView) dialogViewDetailsVideo.findViewById(R.id.date_details_video);
+            videoDetails = (VideoView) dialogViewDetailsVideo.findViewById(R.id.video_details);
+
+            videoDetails.setMediaController(new MediaController(getContext()));
+            videoDetails.setVideoPath(card.getUri());
+            videoDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    videoDetails.start();
+                }
+            });
+        }
+
+        if(card.getHasVideo())
+        {
+            builder.setView(dialogViewDetailsVideo);
+        }
+        else {
+            builder.setView(dialogViewDetailsImage);
+        }
+
+        final AlertDialog dialog =  builder.show();
+
+        titleDetails.setText(card.getTitle());
+        descriptionDetails.setText(card.getDescription());
+        dateDetails.setText(card.getDate());
+        Picasso.get().load(Uri.parse(card.getUri())).into(imageDetails);
     }
 }

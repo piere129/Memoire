@@ -99,6 +99,8 @@ public class ThemesFragment extends Fragment implements ButtonClickListener{
         itemAnimator.setAddDuration(1000);
         itemAnimator.setRemoveDuration(1000);
         themesRecyclerView.setItemAnimator(itemAnimator);
+        themesRecyclerView.setTag("theme_recyclerview");
+
 
         fab.setOnClickListener(new View.OnClickListener() {
 
