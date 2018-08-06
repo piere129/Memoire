@@ -58,14 +58,10 @@ public class TimelineFragment extends Fragment {
         itemAnimator.setRemoveDuration(1000);
         timelineRecyclerView.setItemAnimator(itemAnimator);
 
+        
+
 
 
         return v;
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        cards = themeDatabase.getCardDao().getAllCards();
     }
 }

@@ -56,6 +56,7 @@ public class MediaViewHolder extends RecyclerView.ViewHolder {
             Uri uri = Uri.parse(card.getUri());
             if (!card.getHasVideo()) {
                 Picasso.get().load(uri).fit().centerCrop().into(imageView);
+                overlay.setVisibility(View.INVISIBLE);
             }
             else {
                 Bitmap bitmap2 = ThumbnailUtils.createVideoThumbnail(card.getUri(), MediaStore.Video.Thumbnails.MICRO_KIND);

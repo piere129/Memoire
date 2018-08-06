@@ -60,6 +60,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -162,6 +164,7 @@ public class MediaFragment extends Fragment {
 
                         TextView titleDetails = (TextView) dialogViewDetailsImage.findViewById(R.id.title_details);
                         TextView descriptionDetails = (TextView) dialogViewDetailsImage.findViewById(R.id.description_details);
+                        TextView dateDetails = (TextView) dialogViewDetailsImage.findViewById(R.id.date_details);
                         ImageView imageDetails = (ImageView) dialogViewDetailsImage.findViewById(R.id.image_details);
                         Button editButtonImage = (Button) dialogViewDetailsImage.findViewById(R.id.btn_edit_card);
                         Button editButtonVideo = (Button) dialogViewDetailsVideo.findViewById(R.id.btn_edit_card_video);
@@ -184,9 +187,8 @@ public class MediaFragment extends Fragment {
                         if (card.getHasVideo()) {
                             titleDetails = (TextView) dialogViewDetailsVideo.findViewById(R.id.title_details_video);
                             descriptionDetails = (TextView) dialogViewDetailsVideo.findViewById(R.id.description_details_video);
+                            dateDetails = (TextView) dialogViewDetailsVideo.findViewById(R.id.date_details_video);
                             videoDetails = (VideoView) dialogViewDetailsVideo.findViewById(R.id.video_details);
-                            titleDetails.setText(card.getTitle());
-                            descriptionDetails.setText(card.getDescription());
 
                             videoDetails.setMediaController(new MediaController(getContext()));
                             videoDetails.setVideoPath(card.getUri());
@@ -212,6 +214,7 @@ public class MediaFragment extends Fragment {
 
                         titleDetails.setText(card.getTitle());
                         descriptionDetails.setText(card.getDescription());
+                        dateDetails.setText(card.getDate());
                         Picasso.get().load(Uri.parse(card.getUri())).into(imageDetails);
                         editButtonImage.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -566,6 +569,7 @@ public class MediaFragment extends Fragment {
                             card.setTitle(inputTitle.getText().toString());
                             card.setDescription(inputDescription.getText().toString());
                             card.setUri(videoPath);
+                            card.setDate(DateFormat.getDateTimeInstance().format(new Date()));
                             themeDatabase.getCardDao().modifyCard(card);
                             theme.editCardFromList(card,position);
                             mediaRecyclerView.getRecycledViewPool().clear();
@@ -589,6 +593,7 @@ public class MediaFragment extends Fragment {
                             card.setTitle(inputTitle.getText().toString());
                             card.setDescription(inputDescription.getText().toString());
                             card.setUri(uri.toString());
+                            card.setDate(DateFormat.getDateTimeInstance().format(new Date()));
                             themeDatabase.getCardDao().modifyCard(card);
                             theme.editCardFromList(card,position);
                             adapter.notifyItemChanged(position);
