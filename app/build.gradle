@@ -51,4 +51,7 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
 
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
+
 }

@@ -209,7 +209,7 @@ public class ThemesFragment extends Fragment implements ButtonClickListener {
     /**
      * Deletes a theme from the themeDatabase and reloads the fragment
      *
-     * @param s
+     * @param position
      */
     private void deleteTheme(int position) {
         final int temp = position;
@@ -249,8 +249,9 @@ public class ThemesFragment extends Fragment implements ButtonClickListener {
      */
     @Override
     public void onDestroy() {
+        themeDatabase = null;
         super.onDestroy();
-        compositeDisposable.clear();
+
 
     }
 
