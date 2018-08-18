@@ -1,5 +1,6 @@
 package com.example.pieter.memoire.Fragments;
 
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -89,7 +90,21 @@ public class TimelineFragment extends Fragment {
                     }
 
                     @Override
-                    public void onLongClick(View v, int position) {
+                    public void onLongClick(View v, final int position) {
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Delete Media")
+                                .setMessage("Do you really want to remove this item from the timeline?")
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton("Delete card from Timeline", new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int buttonClicked) {
+                                        Card card = cards.get(position);
+                                        card.setInTimeline(0);
+                                        themeDatabase.getCardDao().modifyCard(card);
+                                        cards.remove(position);
+                                        adapter.notifyItemRemoved(position);
+                                    }})
+                                .setNegativeButton("No", null).show();
 
                     }
                 }));
