@@ -8,7 +8,6 @@ import android.view.View;
 
 public class ItemTouchListener implements RecyclerView.OnItemTouchListener {
 
-    //GestureDetector to intercept touch events
     GestureDetector gestureDetector;
     private ClickListener clickListener;
 

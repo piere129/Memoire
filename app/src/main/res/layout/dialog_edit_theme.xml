@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:text="Edit theme"
+        android:text="@string/edit_theme"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -22,7 +22,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:ems="10"
-        android:hint="Name"
+        android:hint="@string/name"
         android:inputType="textPersonName"
         android:textAlignment="center" />
 
@@ -31,5 +31,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Edit Theme" />
+        android:text="@string/edit_theme" />
 </LinearLayout>

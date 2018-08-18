@@ -3,6 +3,7 @@ package com.example.pieter.memoire.Fragments;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -64,18 +65,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+
 
 import static android.app.Activity.RESULT_OK;
 
@@ -285,12 +279,23 @@ public class MediaFragment extends Fragment {
                     }
 
                     @Override
-                    public void onLongClick(View v, int position) {
+                    public void onLongClick(View v, final int position) {
 
-                        themeDatabase.getCardDao().deleteCard(theme.getCards().get(position));
-                        theme.deleteCardFromList(position);
-                        mediaRecyclerView.getRecycledViewPool().clear();
-                        adapter.notifyItemRemoved(position);
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Delete Media")
+                                .setMessage("Do you really want to delete this item?")
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton("Delete card", new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int buttonClicked) {
+                                        themeDatabase.getCardDao().deleteCard(theme.getCards().get(position));
+                                        theme.deleteCardFromList(position);
+                                        mediaRecyclerView.getRecycledViewPool().clear();
+                                        adapter.notifyItemRemoved(position);
+                                    }})
+                                .setNegativeButton("No", null).show();
+
+
                     }
                 }));
     }
@@ -575,7 +580,6 @@ public class MediaFragment extends Fragment {
                         intent.setType("video/*");
                         intent.setAction(Intent.ACTION_GET_CONTENT);
                         startActivityForResult(Intent.createChooser(intent, "Select Video"), 2);
-                        Toast.makeText(getActivity(), "lmao", Toast.LENGTH_SHORT).show();
                         break;
 
                     case 3:

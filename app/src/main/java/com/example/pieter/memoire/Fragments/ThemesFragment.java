@@ -1,8 +1,8 @@
 package com.example.pieter.memoire.Fragments;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,10 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
-
-import com.example.pieter.memoire.Activities.MainActivity;
 import com.example.pieter.memoire.Activities.ThemeActivity;
 import com.example.pieter.memoire.Adapters.ThemeAdapter;
 import com.example.pieter.memoire.ClickListeners.ButtonClickListener;
@@ -33,21 +30,12 @@ import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.Persistence.ThemeDatabase;
 import com.example.pieter.memoire.R;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+
 
 public class ThemesFragment extends Fragment implements ButtonClickListener {
 
@@ -152,7 +140,18 @@ public class ThemesFragment extends Fragment implements ButtonClickListener {
 
             @Override
             public void onLongClick(View v, final int position) {
-                deleteTheme(position);
+
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete Theme")
+                        .setMessage("Do you really want to delete this theme?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton("Delete theme", new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int buttonClicked) {
+                                deleteTheme(position);
+                            }})
+                        .setNegativeButton("No", null).show();
+
             }
         }));
         return v;

@@ -6,15 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextView;
-
 import com.example.pieter.memoire.Fragments.MediaFragment;
-import com.example.pieter.memoire.Fragments.ThemesFragment;
 import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ThemeActivity extends AppCompatActivity {
 

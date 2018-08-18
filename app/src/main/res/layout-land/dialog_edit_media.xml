@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="top"
@@ -14,7 +13,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
-        android:text="Create new media card"
+        android:text="@string/edit_media_card"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -31,7 +30,8 @@
             android:id="@+id/input_media_edit"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
                     android:id="@+id/textView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Choose import method:" />
+                    android:text="@string/choose_import_method" />
 
                 <Spinner
                     android:id="@+id/spinner_edit"
@@ -60,14 +60,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:hint="Enter tag here"
+                    android:hint="@string/enter_tag_here"
                     android:visibility="invisible" />
 
                 <Button
                     android:id="@+id/btn_import_media_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Import media" />
+                    android:text="@string/import_media" />
             </LinearLayout>
 
             <LinearLayout
@@ -82,7 +82,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:ems="10"
-                    android:hint="Name"
+                    android:hint="@string/name"
                     android:inputType="textPersonName"
                     android:textAlignment="center" />
 
@@ -93,7 +93,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:ems="10"
-                    android:hint="Description"
+                    android:hint="@string/description"
                     android:inputType="textPersonName"
                     android:textAlignment="center" />
 
@@ -102,7 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Edit Card" />
+                    android:text="@string/edit_card" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

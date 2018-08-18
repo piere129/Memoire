@@ -7,7 +7,6 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import com.example.pieter.memoire.Models.Card;
-import com.example.pieter.memoire.Models.Theme;
 
 import java.util.List;
 

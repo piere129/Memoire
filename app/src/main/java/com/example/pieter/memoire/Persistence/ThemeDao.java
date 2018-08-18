@@ -9,9 +9,6 @@ import android.arch.persistence.room.Update;
 import com.example.pieter.memoire.Models.Theme;
 
 import java.util.List;
-
-import io.reactivex.Flowable;
-
 @Dao
 public interface ThemeDao {
 

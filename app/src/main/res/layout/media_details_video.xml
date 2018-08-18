@@ -13,7 +13,7 @@
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Title:"/>
+        android:text="@string/title"/>
 
     <TextView
         android:textSize="15sp"
@@ -29,7 +29,7 @@
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description:"/>
+        android:text="@string/date"/>
 
     <TextView
         android:textSize="15sp"
@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Date:"
+        android:text="@string/date"
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -59,7 +59,7 @@
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Video:"/>
+        android:text="@string/video"/>
 
     <VideoView
         android:layout_marginTop="10dp"
@@ -78,7 +78,7 @@
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:layout_height="wrap_content"
-            android:text="Edit Card"
+            android:text="@string/edit_card"
             android:layout_margin="10dp"/>
 
         <Button

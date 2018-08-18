@@ -10,9 +10,6 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-
-import com.example.pieter.memoire.R;
-
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -59,6 +56,7 @@ public class Card implements Parcelable, Comparable<Card> {
         this.hasVideo = hasVideo;
         this.date = DateFormat.getDateTimeInstance().format(new Date());
         this.themeId = themeId;
+        this.inTimeline = 0;
     }
 
     @Ignore
@@ -68,6 +66,7 @@ public class Card implements Parcelable, Comparable<Card> {
         this.description = description;
         this.hasVideo = hasVideo;
         this.date = DateFormat.getDateTimeInstance().format(new Date());
+        this.inTimeline = 0;
     }
 
     @Ignore
@@ -76,7 +75,7 @@ public class Card implements Parcelable, Comparable<Card> {
         this.title = title;
         this.description = description;
         this.date = DateFormat.getDateTimeInstance().format(new Date());
-
+        this.inTimeline = 0;
     }
 
     @Ignore
@@ -85,6 +84,7 @@ public class Card implements Parcelable, Comparable<Card> {
         this.description = description;
         this.uri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card").toString();
         this.date = DateFormat.getDateTimeInstance().format(new Date());
+        this.inTimeline = 0;
     }
 
     public int getThemeId() {

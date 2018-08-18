@@ -1,10 +1,7 @@
 package com.example.pieter.memoire;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.filters.LargeTest;
@@ -14,12 +11,9 @@ import android.support.test.runner.AndroidJUnit4;
 import com.example.pieter.memoire.Activities.MainActivity;
 import com.example.pieter.memoire.Fragments.ThemesFragment;
 import com.example.pieter.memoire.Fragments.TimelineFragment;
-import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
-import com.example.pieter.memoire.Persistence.CardDao;
 import com.example.pieter.memoire.Persistence.ThemeDatabase;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,8 +28,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumented test, which will execute on an Android device.

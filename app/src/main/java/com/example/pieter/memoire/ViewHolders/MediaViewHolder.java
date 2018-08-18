@@ -1,7 +1,6 @@
 package com.example.pieter.memoire.ViewHolders;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -9,11 +8,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.VideoView;
-
 import com.example.pieter.memoire.Models.Card;
-import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.R;
 import com.squareup.picasso.Picasso;
 
