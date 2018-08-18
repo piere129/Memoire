@@ -30,6 +30,8 @@ import com.example.pieter.memoire.Models.Card;
 import com.example.pieter.memoire.Models.Theme;
 import com.example.pieter.memoire.Persistence.ThemeDatabase;
 import com.example.pieter.memoire.R;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -65,6 +67,9 @@ public class ThemesFragment extends Fragment implements ButtonClickListener {
         ButterKnife.bind(this, v);
 
         themeDatabase = ThemeDatabase.getInstance(getActivity());
+        if(themeDatabase.getThemeDao().getThemes().size() == 0) {
+            generateData();
+        }
         compositeDisposable = new CompositeDisposable();
         if (savedInstanceState == null || !savedInstanceState.containsKey("themes")) {
             //generateData();
@@ -155,6 +160,13 @@ public class ThemesFragment extends Fragment implements ButtonClickListener {
             }
         }));
         return v;
+    }
+
+    private void generateData() {
+        themeDatabase.getThemeDao().addTheme(new Theme("Relaties"));
+        themeDatabase.getThemeDao().addTheme(new Theme("Wonen"));
+        themeDatabase.getThemeDao().addTheme(new Theme("Vrije tijd & dagbesteding"));
+        themeDatabase.getThemeDao().addTheme(new Theme("Gezondheid & welzijn"));
     }
 
     /**
