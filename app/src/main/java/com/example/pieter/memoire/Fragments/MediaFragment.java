@@ -638,7 +638,6 @@ public class MediaFragment extends Fragment {
                                     , inputDescription.getText().toString(), true);
                             themeDatabase.getCardDao().addCard(card);
                             theme.addCardToList(card);
-                            mediaRecyclerView.getRecycledViewPool().clear();
                             adapter.notifyItemInserted(theme.getCards().size() - 1);
                         }
                         dialog.dismiss();
@@ -659,7 +658,6 @@ public class MediaFragment extends Fragment {
                                     , inputDescription.getText().toString(), false);
                             themeDatabase.getCardDao().addCard(card);
                             theme.addCardToList(card);
-                            mediaRecyclerView.getRecycledViewPool().clear();
                             adapter.notifyItemInserted(theme.getCards().size() - 1);
                         }
                         dialog.dismiss();

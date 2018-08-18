@@ -32,6 +32,9 @@
     <string name="date">Date </string>
     <string name="image">Image </string>
     <string name="video">Video </string>
+    <string name="sort_ascending">Sort newest first </string>
+    <string name="sort_descending">Sort oldest first </string>
+
 
 
 

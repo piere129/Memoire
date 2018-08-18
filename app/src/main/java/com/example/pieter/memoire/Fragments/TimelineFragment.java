@@ -31,12 +31,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TimelineFragment extends Fragment {
 
     private List<Card> cards = new ArrayList<>();
     ThemeDatabase themeDatabase;
+
+    @BindView(R.id.btn_ascending)
+    Button sortAsc;
+
+    @BindView(R.id.btn_descending)
+    Button sortDesc;
 
 
     /**
@@ -60,7 +67,7 @@ public class TimelineFragment extends Fragment {
         cards = themeDatabase.getCardDao().getCardsInGallery();
         Collections.sort(cards);
 
-        TimelineAdapter adapter = new TimelineAdapter(cards, getActivity());
+        final TimelineAdapter adapter = new TimelineAdapter(cards, getActivity());
         RecyclerView timelineRecyclerView = (RecyclerView) v.findViewById(R.id.timeline_recyclerview);
         timelineRecyclerView.setAdapter(adapter);
         timelineRecyclerView.setTag("timeline_recyclerview");
@@ -87,6 +94,21 @@ public class TimelineFragment extends Fragment {
                     }
                 }));
 
+        sortDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(cards);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        sortAsc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.reverse(cards);
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         return v;
     }
