@@ -557,7 +557,7 @@ public class MediaFragment extends Fragment {
         });
 
         if (uri != null) {
-            dialogImage.setImageURI(uri);
+            Picasso.get().load(uri).fit().centerCrop().into(dialogImage);
         } else {
             dialogImage.setImageURI(Uri.parse(""));
         }
