@@ -57,7 +57,6 @@ public class GridClickTest {
     @Test
     public void checkThemeFragmentDisplayedOnAddingFragmentContainer() {
         ThemesFragment fragment = new ThemesFragment();
-        mActivityRule.getActivity().getSupportFragmentManager().beginTransaction().add(R.id.timeline_fragment_container, fragment).commit();
 
         Espresso.onView(withId(R.id.timeline_fragment_container)).check(matches((isDisplayed())));
     }
@@ -65,7 +64,6 @@ public class GridClickTest {
     @Test
     public void checkThemeRecyclerViewDisplayed() {
         ThemesFragment fragment = new ThemesFragment();
-        mActivityRule.getActivity().getSupportFragmentManager().beginTransaction().add(R.id.timeline_fragment_container, fragment).commit();
 
         Espresso.onView(withTagValue(is((Object)"theme_recyclerview"))).check(matches((isDisplayed())));
     }
@@ -79,13 +77,12 @@ public class GridClickTest {
 
         Espresso.onView(withTagValue(is((Object)"timeline_recyclerview")))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
-        Espresso.onView(withText("Description:")).check(matches(isDisplayed()));
+        Espresso.onView(withText("Description")).check(matches(isDisplayed()));
     }
 
     @Test
     public void checkThemeRecyclerViewListFromDatabaseMatchesPositionRecyclerview() {
         ThemesFragment fragment = new ThemesFragment();
-        mActivityRule.getActivity().getSupportFragmentManager().beginTransaction().add(R.id.themesFragmentContainer, fragment).commit();
 
         List<Theme> themes = ThemeDatabase.getInstance(mActivityRule.getActivity()).getThemeDao().getThemes();
         Theme theme = themes.get(0);
@@ -96,7 +93,6 @@ public class GridClickTest {
     @Test
     public void checkThemeRecyclerViewOnLongClickDeleteTheme() {
         ThemesFragment fragment = new ThemesFragment();
-        mActivityRule.getActivity().getSupportFragmentManager().beginTransaction().add(R.id.themesFragmentContainer, fragment).commit();
 
         Espresso.onView(withTagValue(is((Object)"theme_recyclerview"))).check(matches((isDisplayed())));
         List<Theme> themes = ThemeDatabase.getInstance(mActivityRule.getActivity()).getThemeDao().getThemes();
