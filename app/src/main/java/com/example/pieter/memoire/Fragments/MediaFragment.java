@@ -505,12 +505,14 @@ public class MediaFragment extends Fragment {
      */
     private void startCardDialog(final boolean isEdit, final int position) {
 
-        if (uri == null) {
-            uri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card");
-        } else if (position != -1) {
+         if (position != -1) {
             Card card = theme.getCards().get(position);
             uri = Uri.parse(card.getUri());
         }
+         if (uri == null) {
+            uri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card");
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View dialogview = isEdit ? getLayoutInflater().inflate(R.layout.dialog_edit_media, null) :
                 getLayoutInflater().inflate(R.layout.dialog_create_media, null);
