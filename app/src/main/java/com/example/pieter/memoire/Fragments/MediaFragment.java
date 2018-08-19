@@ -509,7 +509,7 @@ public class MediaFragment extends Fragment {
             Card card = theme.getCards().get(position);
             uri = Uri.parse(card.getUri());
         }
-         if (uri == null) {
+         if (uri == null || !isEdit) {
             uri = Uri.parse("android.resource://com.example.pieter.memoire/drawable/default_image_card");
         }
 
@@ -586,24 +586,36 @@ public class MediaFragment extends Fragment {
 
                     case 3:
                         Gson gson = new GsonBuilder().create();
-                        FlickrData flickrData = gson.fromJson(getJSONFlickr(inputFlickr.getText().toString()), FlickrData.class);
+                        FlickrData flickrData = new FlickrData();
+                        try {
+                             flickrData = gson.fromJson(getJSONFlickr(inputFlickr.getText().toString()), FlickrData.class);
+                            if (flickrData.stat.equals("ok")) {
 
-                        if (flickrData.stat.equals("ok")) {
-                            for (Photo data : flickrData.photos.photo) {
-                                // retrieve one photo
-                                // http://farm{farmid}.staticflickr.com/{server-id}/{id}_{secret}{size}.jpg
+                                if(flickrData.photos.photo.size() == 0)
+                                {
+                                    Toast.makeText(getActivity(), "Please enter a valid Search term!", Toast.LENGTH_LONG).show();
+                                }
+                                for (Photo data : flickrData.photos.photo) {
+                                    // retrieve one photo
+                                    // http://farm{farmid}.staticflickr.com/{server-id}/{id}_{secret}{size}.jpg
 
-                                String photoUrl = "http://farm%d.staticflickr.com/%s/%s_%s_n.jpg";
-                                String baseurl = String.format(photoUrl, data.farm, data.server, data.id, data.secret);
-                                uri = Uri.parse(baseurl);
-                                //Bitmap bitmap = getImageBitmapFromUrl(baseurl);
-                                //  dialogImage.setImageBitmap(bitmap);
-                                Picasso.get().load(uri).fit().centerCrop().into(dialogImage);
-                                videoPath = null;
-                                break;
+                                    String photoUrl = "http://farm%d.staticflickr.com/%s/%s_%s_n.jpg";
+                                    String baseurl = String.format(photoUrl, data.farm, data.server, data.id, data.secret);
+                                    uri = Uri.parse(baseurl);
+                                    //Bitmap bitmap = getImageBitmapFromUrl(baseurl);
+                                    //  dialogImage.setImageBitmap(bitmap);
+                                    Picasso.get().load(uri).fit().centerCrop().into(dialogImage);
+                                    videoPath = null;
+                                    break;
 
+                                }
                             }
+                        }catch(Exception e)
+                        {
+                            Toast.makeText(getActivity(), "Something went wrong, please ensure you have a valid internet connection!", Toast.LENGTH_LONG).show();
+
                         }
+
                 }
 
 
